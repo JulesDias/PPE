@@ -53,6 +53,21 @@ function RootLayoutNav() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        {/* Ajout des écrans d'inscription */}
+        <Stack.Screen
+          name="SignUpScreen"
+          options={{
+            headerShown: false,
+            presentation: 'card'
+          }}
+        />
+        <Stack.Screen
+          name="suiteSignUp"
+          options={{
+            headerShown: false,
+            presentation: 'card'
+          }}
+        />
       </Stack>
     </ThemeProvider>
   );

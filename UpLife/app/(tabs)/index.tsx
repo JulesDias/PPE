@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Platform, TouchableWithoutFeedback } from 'react-native';
 import { Entypo, FontAwesome } from '@expo/vector-icons';
+import { router } from 'expo-router';
 
 export default function App() {
   const [menuVisible, setMenuVisible] = useState(false);
+
+  // Fonction pour fermer le menu
+  const handleCloseMenu = () => setMenuVisible(false);
 
   return (
     <View style={styles.container}>
       {/* HEADER */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => setMenuVisible(true)}>
-          <Entypo name="menu" size={70} color="white" />
+          <Entypo name="menu" size={50} color="white" />
         </TouchableOpacity>
         <Text style={styles.headerText}>Bonjour, Paul Rouxel.</Text>
       </View>
@@ -45,19 +49,34 @@ export default function App() {
 
       {/* MENU DÉROULANT */}
       {menuVisible && (
-        <View style={styles.menu}>
-          <View style={styles.menuHeader}>
-            <Image source={{ uri: 'https://via.placeholder.com/50' }} style={styles.profilePic} />
-            <Text style={styles.profileName}>Paul Rouxel.</Text>
+        <TouchableWithoutFeedback onPress={handleCloseMenu}>
+          <View style={styles.overlay}>
+            <View style={styles.menu}>
+              <View style={styles.menuHeader}>
+                <Image source={{ uri: 'https://via.placeholder.com/50' }} style={styles.profilePic} />
+                <Text style={styles.profileName}>Paul Rouxel.</Text>
+              </View>
+              <MenuItem icon="user-md" label="Mes professionnels de santé" />
+              <MenuItem icon="calendar" label="Mes rendez-vous" />
+              <MenuItem icon="medkit" label="Mes traitements" />
+              <MenuItem icon="history" label="Mes antécédents" />
+              <MenuItem icon="cog" label="Paramètres" />
+              <MenuItem icon="sign-out" label="Déconnexion" />
+              <MenuItem
+                icon="info"
+                label="Inscription"
+                onPress={() => {
+                  handleCloseMenu(); // Ferme le menu
+                  router.push('/SignUpScreen'); // Navigate vers l'écran d'inscription
+                }}
+              />
+
+              <TouchableOpacity style={styles.closeButton} onPress={handleCloseMenu}>
+                <FontAwesome name="close" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
           </View>
-          <MenuItem icon="user-md" label="Mes professionnels de santé" />
-          <MenuItem icon="calendar" label="Mes rendez-vous" />
-          <MenuItem icon="medkit" label="Mes traitements" />
-          <MenuItem icon="history" label="Mes antécédents" />
-          <TouchableOpacity style={styles.closeButton} onPress={() => setMenuVisible(false)}>
-            <FontAwesome name="close" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
+        </TouchableWithoutFeedback>
       )}
     </View>
   );
@@ -78,8 +97,15 @@ const Treatment: React.FC<{ time: string; label: string }> = ({ time, label }) =
   </View>
 );
 
-const MenuItem: React.FC<{ icon: keyof typeof FontAwesome.glyphMap; label: string }> = ({ icon, label }) => (
-  <TouchableOpacity style={styles.menuItem}>
+const MenuItem: React.FC<{
+  icon: keyof typeof FontAwesome.glyphMap;
+  label: string;
+  onPress?: () => void; // Ajoutez cette prop
+}> = ({ icon, label, onPress }) => (
+  <TouchableOpacity
+    style={styles.menuItem}
+    onPress={onPress} // Utilisez la prop onPress
+  >
     <FontAwesome name={icon} size={20} color="black" />
     <Text style={styles.menuItemText}>{label}</Text>
   </TouchableOpacity>
@@ -106,6 +132,7 @@ const styles = StyleSheet.create({
 
   /* MENU */
   menu: { position: 'absolute', top: 0, left: 0, width: '80%', height: '100%', backgroundColor: '#93B6D2', padding: 15 },
+  overlay: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)' }, // Couvre toute la vue avec une superposition
   menuHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
   profilePic: { width: 50, height: 50, borderRadius: 25 },
   profileName: { fontSize: 18, fontWeight: 'bold', marginLeft: 10 },
