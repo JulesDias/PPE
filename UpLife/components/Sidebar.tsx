@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, TouchableWithoutFeedback } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { FontAwesome, Entypo } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
 interface SidebarProps {
@@ -12,55 +12,169 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
   if (!menuVisible) return null;
 
   return (
-    <TouchableWithoutFeedback onPress={closeMenu}>
-      <View style={styles.overlay}>
-        <View style={styles.menu}>
-          <View style={styles.menuHeader}>
-            <Image source={{ uri: 'https://via.placeholder.com/50' }} style={styles.profilePic} />
-            <Text style={styles.profileName}> Mon espace </Text>
-          </View>
-
-          <MenuItem icon="user-md" label="Mes professionnels de santé" />
-          <MenuItem icon="calendar" label="Mes rendez-vous" />
-          <MenuItem icon="medkit" label="Mes traitements" />
-          <MenuItem icon="history" label="Mes antécédents" />
-          <MenuItem icon="cog" label="Paramètres" />
-          <MenuItem icon="sign-out" label="Déconnexion" />
-          <MenuItem
-            icon="info"
-            label="Inscription"
-            onPress={() => {
-              closeMenu();
-              router.push('/SignUpScreen');
-            }}
-          />
-
-          <TouchableOpacity style={styles.closeButton} onPress={closeMenu}>
-            <FontAwesome name="close" size={24} color="black" />
+    <View style={styles.overlay}>
+      <View style={styles.menu}>
+        
+        {/* HEADER SECTION */}
+        <View style={styles.header}>
+          <TouchableOpacity>
+            <FontAwesome name="gear" size={24} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={closeMenu}>
+            <Entypo name="cross" size={30} color="black" />
           </TouchableOpacity>
         </View>
+
+        {/* PROFILE SECTION */}
+        <View style={styles.profileContainer}>
+          <Image source={{ uri: 'https://via.placeholder.com/50' }} style={styles.profilePic} />
+          <Text style={styles.profileName}>Virginie</Text>
+        </View>
+
+        {/* NOTIFICATIONS */}
+        <View style={styles.notificationBox}>
+          <Text style={styles.notificationText}>NOTIFICATIONS</Text>
+        </View>
+
+        {/* MA SANTÉ SECTION */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>
+            <FontAwesome name="heart" size={18} color="black" /> Ma Santé
+          </Text>
+          <MenuItem label="MES PROFESSIONNELS DE SANTÉ" />
+          <MenuItem label="MES RENDEZ-VOUS" />
+          <MenuItem label="MES TRAITEMENTS" />
+          <MenuItem label="MES ANTÉCÉDENTS" />
+        </View>
+
+        {/* INFORMATIONS & PRÉVENTION */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>
+            <FontAwesome name="info-circle" size={18} color="black" /> Informations et Prévention
+          </Text>
+          <MenuItem label="PLAN PHARMACIES & URGENCES" />
+          <MenuItem label="LA VACCINATION" />
+          <MenuItem label="PRÉVENTION & DÉPISTAGES" />
+          <MenuItem label="SITES & INFORMATIONS UTILES" />
+        </View>
+
+        {/* SOCIAL & LEGAL (NOW SIDE-BY-SIDE) */}
+        <View style={styles.footer}>
+          {/* SOCIAL ICONS */}
+          <View style={styles.socialIcons}>
+            <FontAwesome name="linkedin" size={24} color="black" style={styles.icon} />
+            <FontAwesome name="instagram" size={24} color="black" style={styles.icon} />
+            <FontAwesome name="twitter" size={24} color="black" style={styles.icon} />
+          </View>
+
+          {/* LEGAL MENTION */}
+          <Text style={styles.legalText}>Mentions légales</Text>
+        </View>
+
       </View>
-    </TouchableWithoutFeedback>
+    </View>
   );
 };
 
-const MenuItem: React.FC<{ icon: keyof typeof FontAwesome.glyphMap; label: string; onPress?: () => void }> = ({ icon, label, onPress }) => (
-  <TouchableOpacity style={styles.menuItem} onPress={onPress}>
-    <FontAwesome name={icon} size={20} color="black" />
+const MenuItem: React.FC<{ label: string }> = ({ label }) => (
+  <TouchableOpacity style={styles.menuItem}>
     <Text style={styles.menuItemText}>{label}</Text>
+    <FontAwesome name="chevron-right" size={18} color="black" />
   </TouchableOpacity>
 );
 
 /* Styles */
 const styles = StyleSheet.create({
-  overlay: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-  menu: { position: 'absolute', top: 0, left: 0, width: '80%', height: '100%', backgroundColor: '#93B6D2', padding: 15 },
-  menuHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
-  profilePic: { width: 50, height: 50, borderRadius: 25 },
-  profileName: { fontSize: 18, fontWeight: 'bold', marginLeft: 10 },
-  menuItem: { flexDirection: 'row', alignItems: 'center', paddingVertical: 10 },
-  menuItemText: { marginLeft: 10, fontSize: 16 },
-  closeButton: { position: 'absolute', top: 15, right: 15 },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  menu: {
+    width: '80%',
+    height: '100%',
+    backgroundColor: '#F5F5F5',
+    padding: 15,
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingBottom: 10,
+  },
+  profileContainer: {
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  profilePic: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+  },
+  profileName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 5,
+  },
+  notificationBox: {
+    backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 10,
+    marginBottom: 15,
+    elevation: 3,
+  },
+  notificationText: {
+    fontSize: 14,
+    color: '#555',
+  },
+  section: {
+    marginBottom: 15,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: 'black',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  menuItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#DDD',
+  },
+  menuItemText: {
+    fontSize: 14,
+    color: '#333',
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between', // This ensures items are displayed side by side
+  },
+  socialIcons: {
+    flexDirection: 'row',
+  },
+  icon: {
+    marginHorizontal: 10,
+  },
+  legalText: {
+    fontSize: 12,
+    color: '#555',
+  },
 });
 
 export default Sidebar;
