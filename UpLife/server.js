@@ -6,6 +6,7 @@ const { createClient } = require('@supabase/supabase-js');
 const SUPABASE_URL = 'https://swgrwtjqbohsaghbmznu.supabase.co'; // Remplacez par votre URL Supabase
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN3Z3J3dGpxYm9oc2FnaGJtem51Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzIwMzY3NzEsImV4cCI6MjA0NzYxMjc3MX0.QLrhJ-tzVg5LVV9E1NJQMYvT7CscviaXsPVOLXTpZdU'; // Remplacez par votre clé API Supabase
 
+
 // Initialiser le client Supabase
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -13,7 +14,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const app = express();
 
 // Middleware
-app.use(cors()); 
+app.use(cors());
 app.use(express.json());
 
 // Endpoint pour récupérer le prénom d'un utilisateur avec ID_utilisateur = 1
@@ -40,8 +41,35 @@ app.get('/get-user', async (req, res) => {
   }
 });
 
+// Endpoint pour soumettre un nouvel utilisateur
+app.post('/submit-user', async (req, res) => {
+  const { nom, prenom, email, telephone, motDePasse } = req.body;
+
+  try {
+    const { data, error } = await supabase
+      .from('utilisateurs')
+      .insert([{
+        Nom: nom,
+        Prenom: prenom,
+        Email: email,
+        Tel_perso: telephone,
+        Mdp: motDePasse
+      }]);
+
+    if (error) {
+      console.error('Erreur lors de l\'insertion dans Supabase :', error);
+      return res.status(500).json({ error: 'Erreur lors de l\'enregistrement de l\'utilisateur' });
+    }
+
+    res.status(201).json({ message: 'Utilisateur enregistré avec succès', userId: data[0].ID_utilisateur });
+  } catch (err) {
+    console.error('Erreur serveur :', err);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
 // Lancer le serveur
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`Serveur démarré sur le port ${PORT}`);
-  });
+  console.log(`Serveur démarré sur le port ${PORT}`);
+});

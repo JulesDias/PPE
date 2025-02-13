@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { router } from 'expo-router';
-
 import {
     View,
     Text,
@@ -9,7 +8,8 @@ import {
     TouchableOpacity,
     ScrollView,
     KeyboardAvoidingView,
-    Platform
+    Platform,
+    Alert
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
@@ -23,14 +23,35 @@ export default function InscriptionScreen() {
         confirmerMotDePasse: ''
     });
 
-    const handleSubmit = () => {
-        // Add your form submission logic here
-        console.log(formData);
-        router.push({
-            pathname: "/suiteSignUp",
-            params: { previousFormData: JSON.stringify(formData) }
-        });
+    const handleSubmit = async () => {
+        if (formData.motDePasse !== formData.confirmerMotDePasse) {
+            Alert.alert("Erreur", "Les mots de passe ne correspondent pas.");
+            return;
+        }
 
+        try {
+            const response = await fetch('http://localhost:3000/submit-user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                console.log("Utilisateur enregistré avec succès");
+                router.push({
+                    pathname: "/suiteSignUp",
+                    params: { previousFormData: JSON.stringify(formData) }
+                });
+            } else {
+                const errorData = await response.json();
+                Alert.alert("Erreur", errorData.error || "Erreur lors de l'enregistrement de l'utilisateur.");
+            }
+        } catch (error) {
+            console.error("Erreur réseau :", error);
+            Alert.alert("Erreur", "Erreur réseau. Veuillez réessayer.");
+        }
     };
 
     return (
@@ -103,6 +124,7 @@ export default function InscriptionScreen() {
         </KeyboardAvoidingView>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {
