@@ -9,7 +9,7 @@ export default function App() {
 
   // Fonction pour fermer le menu
   const handleCloseMenu = () => setMenuVisible(false);
-  
+
   useEffect(() => {
     // Appel à l'API backend pour récupérer le prénom
     fetch('http://localhost:3000/get-user') // Utilisez l'IP de votre machine si vous testez sur un appareil physique
@@ -26,7 +26,7 @@ export default function App() {
         setPrenom('Erreur de chargement'); // Message en cas d'erreur
       });
   }, []);
-  
+
 
   return (
     <View style={styles.container}>
@@ -35,6 +35,7 @@ export default function App() {
         <TouchableOpacity onPress={() => setMenuVisible(true)}>
           <Entypo name="menu" size={50} color="white" />
         </TouchableOpacity>
+        <Image source={require('@/assets/images/Logo.png')} style={styles.logo} />
         <Text style={styles.headerText}>Bonjour {prenom} ! </Text>
       </View>
 
@@ -135,6 +136,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#EFEFEF' },
   header: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#26336A', padding: 15 },
   headerText: { fontSize: 18, fontWeight: 'bold', color: 'white', marginLeft: 10 },
+  logo: { width: 50, height: 50, marginLeft: 10 },
   content: { padding: 15 },
   section: { marginBottom: 15 },
   sectionTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 5, color: '#26336A' },

@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { Platform } from 'react-native';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
@@ -58,14 +59,24 @@ function RootLayoutNav() {
           name="SignUpScreen"
           options={{
             headerShown: false,
-            presentation: 'card'
+            presentation: 'card',
+            // Add platform-specific options
+            ...Platform.select({
+              ios: { animation: 'slide_from_right' },
+              android: { animation: 'fade_from_bottom' },
+            }),
           }}
         />
         <Stack.Screen
           name="suiteSignUp"
           options={{
             headerShown: false,
-            presentation: 'card'
+            presentation: 'card',
+            // Add platform-specific options
+            ...Platform.select({
+              ios: { animation: 'slide_from_right' },
+              android: { animation: 'fade_from_bottom' },
+            }),
           }}
         />
       </Stack>
