@@ -1,0 +1,22 @@
+[
+    {
+      "ID_utilisateur": 1,
+      "Nom": "Hypertension"
+    },
+    {
+      "ID_utilisateur": 1,
+      "Nom": "Alzheimer"
+    },
+    {
+      "ID_utilisateur": 1,
+      "Nom": "Cancer de la peau"
+    },
+    {
+      "ID_utilisateur": 1,
+      "Nom": "Tyroïde"
+    },
+    {
+      "ID_utilisateur": 1,
+      "Nom": "Cancer de l'oeil"
+    }
+  ]

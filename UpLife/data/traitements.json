@@ -1,0 +1,18 @@
+[
+    {
+      "ID_utilisateur": 1,
+      "Molecule": "Amoxicilline",
+      "Duree": 30,
+      "Frequence": 3,
+      "Quantite": 1000,
+      "Description": "1000mg, 3x/jour, 30 jours"
+    },
+    {
+      "ID_utilisateur": 1,
+      "Molecule": "Corticoïdes",
+      "Duree": 7,
+      "Frequence": 1,
+      "Quantite": 40,
+      "Description": "Corticoïdes 40mg, 1x/jour, une semaine."
+    }
+  ]

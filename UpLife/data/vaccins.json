@@ -1,0 +1,14 @@
+[
+    {
+      "ID_utilisateur": 1,
+      "Nom": "Papillomavirus",
+      "V_date": "2010-06-09",
+      "Duree_rappel": 10
+    },
+    {
+      "ID_utilisateur": 1,
+      "Nom": "Rage",
+      "V_date": "2003-06-12",
+      "Duree_rappel": 12
+    }
+  ]

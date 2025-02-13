@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, Platform, TouchableWithoutFeedback } from 'react-native';
 import { Entypo, FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -57,7 +57,13 @@ export default function App() {
                 <Image source={{ uri: 'https://via.placeholder.com/50' }} style={styles.profilePic} />
                 <Text style={styles.profileName}> Mon espace </Text>
               </View>
-              <MenuItem icon="user-md" label="Mes professionnels de santé" />
+              <MenuItem 
+                icon="user-md" 
+                label="Mes professionnels de santé"
+                onPress={() => {
+                  handleCloseMenu(); // Ferme le menu
+                  router.push('/MesProDeSante'); // Navigate vers l'écran des professionnels de snate
+                }} />
               <MenuItem icon="calendar" label="Mes rendez-vous" />
               <MenuItem icon="medkit" label="Mes traitements" />
               <MenuItem icon="history" label="Mes antécédents" />

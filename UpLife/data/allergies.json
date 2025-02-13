@@ -1,0 +1,17 @@
+[
+    {
+      "ID_utilisateur": 1,
+      "Intitule": "Poil de chat",
+      "Severite": 1
+    },
+    {
+      "ID_utilisateur": 1,
+      "Intitule": "Fruits à coque",
+      "Severite": 3
+    },
+    {
+      "ID_utilisateur": 1,
+      "Intitule": "Acariens",
+      "Severite": 2
+    }
+  ]
