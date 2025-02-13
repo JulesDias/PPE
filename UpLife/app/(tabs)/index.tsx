@@ -5,27 +5,9 @@ import { router } from 'expo-router';
 
 export default function App() {
   const [menuVisible, setMenuVisible] = useState(false);
-  const [prenom, setPrenom] = useState('');
-
+ 
   // Fonction pour fermer le menu
   const handleCloseMenu = () => setMenuVisible(false);
-  
-  useEffect(() => {
-    // Appel à l'API backend pour récupérer le prénom
-    fetch('http://localhost:3000/get-user') // Utilisez l'IP de votre machine si vous testez sur un appareil physique
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.Prenom) {
-          setPrenom(data.Prenom); // Met à jour le prénom
-        } else {
-          setPrenom('Utilisateur inconnu'); // Message par défaut si aucun prénom trouvé
-        }
-      })
-      .catch((error) => {
-        console.error('Erreur lors de la récupération du prénom :', error);
-        setPrenom('Erreur de chargement'); // Message en cas d'erreur
-      });
-  }, []);
   
 
   return (
@@ -35,7 +17,7 @@ export default function App() {
         <TouchableOpacity onPress={() => setMenuVisible(true)}>
           <Entypo name="menu" size={50} color="white" />
         </TouchableOpacity>
-        <Text style={styles.headerText}>Bonjour {prenom} ! </Text>
+        <Text style={styles.headerText}>Bonjour Virginie ! </Text>
       </View>
 
       {/* CONTENU PRINCIPAL */}
@@ -73,7 +55,7 @@ export default function App() {
             <View style={styles.menu}>
               <View style={styles.menuHeader}>
                 <Image source={{ uri: 'https://via.placeholder.com/50' }} style={styles.profilePic} />
-                <Text style={styles.profileName}> {prenom} </Text>
+                <Text style={styles.profileName}> Mon espace </Text>
               </View>
               <MenuItem icon="user-md" label="Mes professionnels de santé" />
               <MenuItem icon="calendar" label="Mes rendez-vous" />
