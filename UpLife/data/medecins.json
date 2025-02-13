@@ -1,0 +1,26 @@
+[
+    {
+      "ID_medecin": 1,
+      "Nom": "Mehdikaman",
+      "Specialite": "Généraliste",
+      "Adresse": "5 rue des Lilas, 75015 Paris"
+    },
+    {
+      "ID_medecin": 2,
+      "Nom": "Malodo",
+      "Specialite": "Rhumatologue",
+      "Adresse": "10 rue Sextius Michel, 75015 Paris"
+    },
+    {
+      "ID_medecin": 3,
+      "Nom": "Hervéïache",
+      "Specialite": "Gynécologoque",
+      "Adresse": "5 rue des Tritons, 78000 Versailles\n"
+    },
+    {
+      "ID_medecin": 4,
+      "Nom": "Adandesagesse",
+      "Specialite": "Dentiste",
+      "Adresse": "5 boulevard de la Couronne"
+    }
+  ]
