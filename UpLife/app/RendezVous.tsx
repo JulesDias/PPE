@@ -5,6 +5,9 @@ import { Calendar } from 'react-native-calendars';
 import rdvs from '@/data/rdvs.json';
 import medecins from '@/data/medecins.json';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Sidebar from '@/components/Sidebar';
+import { router } from 'expo-router';
+
 
 const GestionRDV = () => {
     const [isCalendarView, setIsCalendarView] = useState(false);
@@ -14,6 +17,7 @@ const GestionRDV = () => {
         { id: 1, text: 'Janvier 2025 - Ophtalmologue - Dr. Dupont', checked: false },
         { id: 2, text: 'Mars 2025 - Dermatologue - Dr. Jules', checked: false }
     ]);
+    const [menuVisible, setMenuVisible] = useState(false);
 
     useEffect(() => {
         const sortedRdvs = rdvs.sort((a, b) => new Date(a.Date_rdv).getTime() - new Date(b.Date_rdv).getTime());
@@ -31,6 +35,17 @@ const GestionRDV = () => {
 
     return (
         <View style={{ flex: 1, padding: 20, backgroundColor: '#FEFEFE' }}>
+            {/* Bouton Menu (Gauche) */}
+            <TouchableOpacity onPress={() => setMenuVisible(true)} style={{ position: 'absolute', top: 15, left: 15, zIndex: 10 }}>
+                <Icon name="bars" size={30} color="black" />
+            </TouchableOpacity>
+
+            {/* Bouton Maison (Droite) */}
+            <TouchableOpacity onPress={() => router.push('/(tabs)')} style={{ position: 'absolute', top: 15, right: 15, zIndex: 10 }}>
+                <Icon name="home" size={30} color="black" />
+            </TouchableOpacity>
+
+
             <Text style={{
                 fontSize: 20,
                 fontWeight: 'bold',
@@ -113,6 +128,7 @@ const GestionRDV = () => {
                     </View>
                 </View>
             </Modal>
+            <Sidebar menuVisible={menuVisible} closeMenu={() => setMenuVisible(false)} />
         </View>
     );
 };
