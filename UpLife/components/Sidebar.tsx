@@ -14,7 +14,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
   return (
     <View style={styles.overlay}>
       <View style={styles.menu}>
-        
+
         {/* HEADER SECTION */}
         <View style={styles.header}>
           <TouchableOpacity>
@@ -42,7 +42,10 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
             <FontAwesome name="heart" size={18} color="black" /> Ma Santé
           </Text>
           <MenuItem label="MES PROFESSIONNELS DE SANTÉ" />
-          <MenuItem label="MES RENDEZ-VOUS" />
+          <MenuItem
+            label="MES RENDEZ-VOUS"
+            onPress={() => router.push('/RendezVous')}
+          />
           <MenuItem label="MES TRAITEMENTS" />
           <MenuItem label="MES ANTÉCÉDENTS" />
         </View>
@@ -76,8 +79,8 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
   );
 };
 
-const MenuItem: React.FC<{ label: string }> = ({ label }) => (
-  <TouchableOpacity style={styles.menuItem}>
+const MenuItem: React.FC<{ label: string; onPress?: () => void }> = ({ label, onPress }) => (
+  <TouchableOpacity style={styles.menuItem} onPress={onPress}>
     <Text style={styles.menuItemText}>{label}</Text>
     <FontAwesome name="chevron-right" size={18} color="black" />
   </TouchableOpacity>

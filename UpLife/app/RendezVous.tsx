@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Modal, Button, Switch } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Modal, Button, Switch, Image } from 'react-native';
 import { Checkbox } from 'react-native-paper';
 import { Calendar } from 'react-native-calendars';
 import rdvs from '@/data/rdvs.json';
 import medecins from '@/data/medecins.json';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const GestionRDV = () => {
     const [isCalendarView, setIsCalendarView] = useState(false);
@@ -30,10 +31,18 @@ const GestionRDV = () => {
 
     return (
         <View style={{ flex: 1, padding: 20, backgroundColor: '#FEFEFE' }}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center', color: 'black' }}>MES RENDEZ-VOUS</Text>
+            <Text style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                textAlign: 'center',
+                color: 'black',
+                fontFamily: 'Sora-Medium',
+            }}>
+                MES RENDEZ-VOUS
+            </Text>
 
             {/* RAPPELS */}
-            <View style={{ backgroundColor: '#26336A', padding: 15, borderRadius: 10, marginBottom: 10 }}>
+            <View style={{ backgroundColor: '#b6d379', padding: 15, borderRadius: 10, marginBottom: 10 }}>
                 <Text style={{ fontWeight: 'bold', color: 'white' }}>RAPPELS DES RENDEZ-VOUS À PRENDRE</Text>
                 {rappels.map((rappel) => (
                     <View key={rappel.id} style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -51,13 +60,15 @@ const GestionRDV = () => {
                 ))}
             </View>
 
-            {/* TOGGLE SWITCH */}
-            <View style={{ backgroundColor: '#26336A', padding: 15, borderRadius: 10, marginBottom: 10 }}>
-                <Switch value={isCalendarView} onValueChange={toggleView} style={{ alignSelf: 'center', marginVertical: 10 }} />
+            {/* TOGGLE SWITCH AVEC ICÔNES */}
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
+                <Icon name="list" size={24} color={isCalendarView ? "#999" : "#b6d379"} style={{ marginRight: 10 }} />
+                <Switch value={isCalendarView} onValueChange={toggleView} />
+                <Icon name="calendar" size={24} color={isCalendarView ? "#b6d379" : "#999"} style={{ marginLeft: 10 }} />
             </View>
 
             {/* LISTE OU CALENDRIER */}
-            <View style={{ backgroundColor: '#26336A', padding: 15, borderRadius: 10 }}>
+            <View style={{ backgroundColor: '#b6d379', padding: 15, borderRadius: 10 }}>
                 {isCalendarView ? (
                     <Calendar
                         markedDates={rdvData.reduce((acc: { [key: string]: { selected: boolean; marked: boolean; selectedColor: string } }, rdv) => {
@@ -75,7 +86,7 @@ const GestionRDV = () => {
                         keyExtractor={(item) => item.Date_rdv}
                         renderItem={({ item }) => (
                             <TouchableOpacity onPress={() => setSelectedRDV(item)}>
-                                <View style={{ padding: 10, marginVertical: 5, backgroundColor: '#26336A', borderRadius: 5 }}>
+                                <View style={{ padding: 10, marginVertical: 5, backgroundColor: '#b6d379', borderRadius: 5 }}>
                                     <Text style={{ color: 'white' }}>{item.Date_rdv} - {item.Horaire}</Text>
                                     <Text style={{ color: 'white' }}>{item.Intitule} - Dr. {getMedecinName(item.ID_medecin)}</Text>
                                 </View>
