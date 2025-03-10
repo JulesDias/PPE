@@ -37,13 +37,6 @@ export default function TabLayout() {
                     tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
                 }}
             />
-            <Tabs.Screen
-                name="two"
-                options={{
-                    title: '',  // Retirer le titre
-                    tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-                }}
-            />
         </Tabs>
     );
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import MapView, { Marker } from 'react-native-maps';
+import { WebView } from 'react-native-webview';  // Importer WebView
 import Sidebar from '../../components/Sidebar';
 import rdvs from '@/data/rdvs.json';
 
@@ -27,7 +27,8 @@ export default function HomePage() {
         <Text style={styles.headerText}>Bonjour Virginie !</Text>
       </View>
 
-      <View style={styles.content}>
+      {/* ScrollView pour rendre la page défilable */}
+      <ScrollView style={styles.content}>
         <Section title="🗓️ MES RENDEZ-VOUS">
           <View style={styles.card}>
             {nextAppointments.length > 0 ? (
@@ -54,35 +55,20 @@ export default function HomePage() {
         {Platform.OS !== 'web' && (
           <Section title="📍 URGENCES & PHARMACIES">
             <View style={styles.mapContainer}>
-              <MapView
-                style={styles.map}
-                initialRegion={{
-                  latitude: 48.8566,
-                  longitude: 2.3522,
-                  latitudeDelta: 0.05,
-                  longitudeDelta: 0.05,
-                }}
-              >
-                <Marker
-                  coordinate={{ latitude: 48.8584, longitude: 2.2945 }}
-                  title="Pharmacie Centrale"
-                  description="Ouverte 24/7"
-                />
-                <Marker
-                  coordinate={{ latitude: 48.8606, longitude: 2.3376 }}
-                  title="Hôpital de Paris"
-                  description="Service d'urgences"
-                />
-              </MapView>
+              <WebView
+                source={{ uri: 'https://monpharmacien-idf.fr/widget/500' }}  // Utilisation de WebView pour afficher l'iframe
+                style={{ width: '100%', height: '100%' }}
+              />
             </View>
           </Section>
         )}
-      </View>
+      </ScrollView>
 
       <Sidebar menuVisible={menuVisible} closeMenu={() => setMenuVisible(false)} />
     </View>
   );
 }
+
 
 const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <View style={styles.section}>
@@ -100,11 +86,11 @@ const Treatment: React.FC<{ time: string; label: string }> = ({ time, label }) =
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#EFEFEF' },
-  header: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#26336A', padding: 15 },
+  header: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#b6d379', padding: 15 },
   headerText: { fontSize: 18, fontWeight: 'bold', color: 'white', marginLeft: 10 },
   content: { padding: 15 },
   section: { marginBottom: 15 },
-  sectionTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 5, color: '#26336A' },
+  sectionTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 5, color: '#4d7d2f' },
   card: { backgroundColor: 'white', padding: 15, borderRadius: 10, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 5, elevation: 3 },
   rdvItem: { marginBottom: 8 },
   rdvDate: { fontSize: 14, fontWeight: 'bold', color: 'red' },
@@ -113,6 +99,12 @@ const styles = StyleSheet.create({
   treatmentRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5 },
   treatmentTime: { fontWeight: 'bold' },
   treatmentLabel: { color: '#0077b6' },
-  mapContainer: { borderRadius: 10, overflow: 'hidden', height: 200, backgroundColor: '#ddd' },
-  map: { width: '100%', height: '100%' },
+  mapContainer: {
+    borderRadius: 10,
+    overflow: 'hidden',
+    height: 350,  // Ajuste la hauteur selon tes besoins
+    backgroundColor: '#ddd',
+    marginBottom: 20, // Un peu d'espace sous le widget
+  },
 });
+

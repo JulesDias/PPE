@@ -8,7 +8,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Sidebar from '@/components/Sidebar';
 import { router } from 'expo-router';
 
-
 const GestionRDV = () => {
     const [isCalendarView, setIsCalendarView] = useState(false);
     const [selectedRDV, setSelectedRDV] = useState<{ ID_utilisateur: number; ID_medecin: number; Date_rdv: string; Horaire: string; Intitule: string; } | null>(null);
@@ -35,16 +34,17 @@ const GestionRDV = () => {
 
     return (
         <View style={{ flex: 1, padding: 20, backgroundColor: '#FEFEFE' }}>
-            {/* Bouton Menu (Gauche) */}
-            <TouchableOpacity onPress={() => setMenuVisible(true)} style={{ position: 'absolute', top: 15, left: 15, zIndex: 10 }}>
-                <Icon name="bars" size={30} color="black" />
-            </TouchableOpacity>
+            {/* Bouton Menu (Gauche), affiché seulement si le menu est fermé */}
+            {!menuVisible && (
+                <TouchableOpacity onPress={() => setMenuVisible(true)} style={{ position: 'absolute', top: 15, left: 15, zIndex: 10 }}>
+                    <Icon name="bars" size={30} color="black" />
+                </TouchableOpacity>
+            )}
 
             {/* Bouton Maison (Droite) */}
             <TouchableOpacity onPress={() => router.push('/(tabs)')} style={{ position: 'absolute', top: 15, right: 15, zIndex: 10 }}>
                 <Icon name="home" size={30} color="black" />
             </TouchableOpacity>
-
 
             <Text style={{
                 fontSize: 20,
