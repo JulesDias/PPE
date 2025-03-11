@@ -128,7 +128,7 @@ const MesAntecedents: React.FC = () => {
           ? {
               ...p,
               titre: editItem.titre || '',
-              date: editItem.date || '',
+              date: (editItem as AntecedentPersonnel).date || '',
               traitement: (editItem as AntecedentPersonnel).traitement || '',
               medecin: (editItem as AntecedentPersonnel).medecin || '',
               notes: (editItem as AntecedentPersonnel).notes || '',
@@ -177,7 +177,7 @@ const MesAntecedents: React.FC = () => {
       const newPersonnel: AntecedentPersonnel = {
         id: newId,
         titre: newItem.titre || '',
-        date: newItem.date || '',
+        date: (newItem as AntecedentPersonnel).date || '',
         traitement: (newItem as AntecedentPersonnel).traitement || '',
         medecin: (newItem as AntecedentPersonnel).medecin || '',
         notes: (newItem as AntecedentPersonnel).notes || '',
@@ -319,7 +319,7 @@ const MesAntecedents: React.FC = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="Date"
-                  value={editItem.date}
+                  value={(editItem as AntecedentPersonnel).date}
                   onChangeText={(text) => setEditItem({ ...editItem, date: text })}
                 />
                 <TextInput
@@ -410,7 +410,7 @@ const MesAntecedents: React.FC = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="Date"
-                  value={newItem.date || ''}
+                  value={(newItem as AntecedentPersonnel).date || ''}
                   onChangeText={(text) => setNewItem({ ...newItem, date: text })}
                 />
                 <TextInput

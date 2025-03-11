@@ -56,7 +56,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
           <MenuItem label="PLAN PHARMACIES & URGENCES" onPress={() => router.push('/PlanPharmaUrgence')}/>
           <MenuItem label="LA VACCINATION" />
           <MenuItem label="PRÉVENTION & DÉPISTAGES" />
-          <MenuItem label="SITES & INFORMATIONS UTILES" />
+          <MenuItem label="SITES & INFORMATIONS UTILES" onPress={() => router.push('/SiteInfoUtile')}/>
         </View>
 
         {/* SOCIAL & LEGAL (NOW SIDE-BY-SIDE) */}
