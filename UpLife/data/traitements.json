@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "type": "Pilule",
+        "nom": "Optidrill",
+        "date_debut": "2023-06-13",
+        "date_fin": "",
+        "heure": "20:00",
+        "dosage": "0.03mg/2mg"
+    },
+    {
+        "id": 2,
+        "type": "Antibiotique",
+        "nom": "Amoxicilline",
+        "date_debut": "2025-03-07",
+        "date_fin": "2025-03-13",
+        "heure": "13:00",
+        "dosage": "500mg"
+    }
+]
