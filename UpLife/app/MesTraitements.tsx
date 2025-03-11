@@ -5,7 +5,9 @@ import moment from "moment";
 import "moment/locale/fr";
 import Sidebar from "@/components/Sidebar";
 import traitementsData from "@/data/traitements.json";
-import { router } from "expo-router";  // Importation de router
+import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Checkbox } from 'react-native-paper';
 
 interface Traitement {
     id: number;
@@ -25,13 +27,15 @@ interface Rappels {
 const TraitementsScreen = () => {
     const [rappels, setRappels] = useState<Rappels>({ matin: [], midi: [], soir: [] });
     const [menuVisible, setMenuVisible] = useState(false);
+    const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
 
     useEffect(() => {
         moment.locale("fr");
+        loadCheckedItems();
 
         const rappelsTriés: Rappels = { matin: [], midi: [], soir: [] };
         traitementsData.forEach((traitement) => {
-            const heure = parseInt(traitement.heure.split(":")[0], 10);
+            const heure = parseInt(traitement.heure.split(':')[0], 10);
             if (heure < 12) {
                 rappelsTriés.matin.push(traitement);
             } else if (heure < 18) {
@@ -40,13 +44,33 @@ const TraitementsScreen = () => {
                 rappelsTriés.soir.push(traitement);
             }
         });
-
         setRappels(rappelsTriés);
     }, []);
 
+    const loadCheckedItems = async () => {
+        const today = moment().format("YYYY-MM-DD");
+        const storedData = await AsyncStorage.getItem("checkedItems");
+        if (storedData) {
+            const parsedData = JSON.parse(storedData);
+            if (parsedData.date === today) {
+                setCheckedItems(parsedData.items);
+            } else {
+                setCheckedItems({}); // Réinitialiser si ce n'est plus le même jour
+            }
+        }
+    };
+
+    const handleCheckboxChange = async (id: string) => {
+        const updatedCheckedItems = { ...checkedItems, [id]: !checkedItems[id] };
+        setCheckedItems(updatedCheckedItems);
+        await AsyncStorage.setItem(
+            "checkedItems",
+            JSON.stringify({ date: moment().format("YYYY-MM-DD"), items: updatedCheckedItems })
+        );
+    };
+
     return (
         <View style={styles.container}>
-            {/* Navbar */}
             <View style={styles.navbar}>
                 <TouchableOpacity onPress={() => setMenuVisible(true)}>
                     <Ionicons name="menu" size={28} color="black" />
@@ -57,33 +81,29 @@ const TraitementsScreen = () => {
                 </TouchableOpacity>
             </View>
 
-            {/* Sidebar */}
             <Sidebar menuVisible={menuVisible} closeMenu={() => setMenuVisible(false)} />
 
-            {/* Rappels */}
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>RAPPEL - Aujourd'hui, {moment().format("DD MMMM")}</Text>
                 <View style={styles.card}>
-                    <Text style={styles.bold}>Matin :</Text>
-                    {rappels.matin.length > 0 ? (
-                        rappels.matin.map((t) => (
-                            <Text key={t.id}>○ {t.nom} / {moment(t.heure, "HH:mm").format("HH[h]mm")}</Text>
-                        ))
-                    ) : <Text>Aucun</Text>}
-
-                    <Text style={styles.bold}>Midi :</Text>
-                    {rappels.midi.length > 0 ? (
-                        rappels.midi.map((t) => (
-                            <Text key={t.id}>○ {t.nom} / {moment(t.heure, "HH:mm").format("HH[h]mm")}</Text>
-                        ))
-                    ) : <Text>Aucun</Text>}
-
-                    <Text style={styles.bold}>Soir :</Text>
-                    {rappels.soir.length > 0 ? (
-                        rappels.soir.map((t) => (
-                            <Text key={t.id}>○ {t.nom} / {moment(t.heure, "HH:mm").format("HH[h]mm")}</Text>
-                        ))
-                    ) : <Text>Aucun</Text>}
+                    {Object.entries(rappels).map(([periode, items]) => (
+                        <View key={periode}>
+                            <Text style={styles.bold}>{periode.charAt(0).toUpperCase() + periode.slice(1)} :</Text>
+                            {items.length > 0 ? (
+                                items.map((t: Traitement) => (
+                                    <View key={t.id} style={styles.checkboxContainer}>
+                                        <Checkbox
+                                            status={checkedItems[t.id] ? 'checked' : 'unchecked'}
+                                            onPress={() => handleCheckboxChange(t.id.toString())}
+                                        />
+                                        <Text> {t.nom} / {moment(t.heure, "HH:mm").format("HH[h]mm")}</Text>
+                                    </View>
+                                ))
+                            ) : (
+                                <Text>Aucun</Text>
+                            )}
+                        </View>
+                    ))}
                 </View>
             </View>
 
@@ -115,58 +135,18 @@ const TraitementsScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#F5F5F5",
-        paddingHorizontal: 16,
-        paddingTop: 40,
-    },
-    navbar: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: 20,
-    },
-    header: {
-        fontSize: 18,
-        fontWeight: "bold",
-    },
-    section: {
-        marginBottom: 20,
-    },
-    sectionTitle: {
-        fontWeight: "bold",
-        marginBottom: 10,
-    },
-    card: {
-        backgroundColor: "#93b8d3",
-        padding: 15,
-        borderRadius: 10,
-        shadowColor: "#000",
-        shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 4,
-        elevation: 3,
-    },
-    bold: {
-        fontWeight: "bold",
-        marginTop: 10,
-    },
-    traitementItem: {
-        marginBottom: 10,
-    },
-    traitementTitle: {
-        fontWeight: "bold",
-    },
-    addButton: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 10,
-    },
-    addButtonText: {
-        marginLeft: 5,
-    },
+    container: { flex: 1, backgroundColor: "#F5F5F5", paddingHorizontal: 16, paddingTop: 40 },
+    navbar: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 20 },
+    header: { fontSize: 18, fontWeight: "bold" },
+    section: { marginBottom: 20 },
+    sectionTitle: { fontWeight: "bold", marginBottom: 10 },
+    card: { backgroundColor: "#93b8d3", padding: 15, borderRadius: 10, elevation: 3 },
+    bold: { fontWeight: "bold", marginTop: 10 },
+    checkboxContainer: { flexDirection: "row", alignItems: "center", marginBottom: 5 },
+    traitementItem: { marginBottom: 10 },
+    traitementTitle: { fontWeight: "bold" },
+    addButton: { flexDirection: "row", alignItems: "center", justifyContent: "center", marginTop: 10 },
+    addButtonText: { marginLeft: 5 },
 });
 
 export default TraitementsScreen;

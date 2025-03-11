@@ -1,42 +1,24 @@
 import React from 'react';
-import { Platform } from 'react-native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Tabs } from 'expo-router';
+import { Stack } from 'expo-router';
 
-import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: {
-    name: React.ComponentProps<typeof FontAwesome>['name'];
-    color: string;
-}) {
-    return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
-
-export default function TabLayout() {
+export default function Layout() {
     const colorScheme = useColorScheme();
 
     return (
-        <Tabs
+        <Stack
             screenOptions={{
-                tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-                headerTransparent: true,  // Rendre l'en-tête transparent
-                headerShown: true,        // Garder l'en-tête, mais le rendre transparent
-                tabBarStyle: {
-                    paddingBottom: Platform.OS === 'ios' ? 20 : 0, // Ajuster le padding pour iOS
-                },
-                headerStyle: {
-                    height: Platform.OS === 'ios' ? 100 : 60, // Ajuster la hauteur de l'en-tête pour iOS
-                },
-            }}>
-            <Tabs.Screen
+                headerTransparent: true,
+                headerShown: true,
+            }}
+        >
+            <Stack.Screen
                 name="index"
                 options={{
-                    title: '',  // Retirer le titre
-                    tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+                    title: '',
                 }}
             />
-        </Tabs>
+        </Stack>
     );
 }
