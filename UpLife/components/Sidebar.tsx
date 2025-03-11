@@ -53,7 +53,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
           <Text style={styles.sectionTitle}>
             <FontAwesome name="info-circle" size={18} color="black" /> Informations et Prévention
           </Text>
-          <MenuItem label="PLAN PHARMACIES & URGENCES" />
+          <MenuItem label="PLAN PHARMACIES & URGENCES" onPress={() => router.push('/PlanPharmaUrgence')}/>
           <MenuItem label="LA VACCINATION" />
           <MenuItem label="PRÉVENTION & DÉPISTAGES" />
           <MenuItem label="SITES & INFORMATIONS UTILES" />
