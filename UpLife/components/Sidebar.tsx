@@ -45,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
           <MenuItem label="MES PROFESSIONNELS DE SANTÉ" />
           <MenuItem label="MES RENDEZ-VOUS" onPress={() => router.push('/RendezVous')} />
           <MenuItem label="MES TRAITEMENTS" />
-          <MenuItem label="MES ANTÉCÉDENTS" />
+          <MenuItem label="MES ANTÉCÉDENTS" onPress={() => router.push('/MesAntecedents')}/>
         </View>
 
         {/* INFORMATIONS & PRÉVENTION */}
