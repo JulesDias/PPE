@@ -33,5 +33,12 @@
     "Date_rdv": "2025-06-28",
     "Horaire": "11:00",
     "Intitule": "Consultation de routine"
+  },
+  {
+    "ID_utilisateur": 1,
+    "ID_medecin": 3,
+    "Date_rdv": "2024-06-28",
+    "Horaire": "12:00",
+    "Intitule": "Consultation de routine"
   }
 ]

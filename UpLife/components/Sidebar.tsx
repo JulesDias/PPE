@@ -42,7 +42,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
             <FontAwesome name="heart" size={18} color="black" /> Ma Santé
           </Text>
           <MenuItem label="MON PROFIL" onPress={() => router.push('/UserProfile')} />
-          <MenuItem label="MES PROFESSIONNELS DE SANTÉ" />
+          <MenuItem label="MES PROFESSIONNELS DE SANTÉ" onPress={() => router.push('/MesProDeSante')} />
           <MenuItem label="MES RENDEZ-VOUS" onPress={() => router.push('/RendezVous')} />
           <MenuItem label="MES TRAITEMENTS" />
           <MenuItem label="MES ANTÉCÉDENTS" />
