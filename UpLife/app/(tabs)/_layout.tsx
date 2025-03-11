@@ -1,24 +1,16 @@
 import React from 'react';
 import { Stack } from 'expo-router';
 
-import { useColorScheme } from '@/components/useColorScheme';
 
 export default function Layout() {
-    const colorScheme = useColorScheme();
-
     return (
         <Stack
             screenOptions={{
-                headerTransparent: true,
-                headerShown: true,
+                headerShown: false, // Désactive complètement le header natif
             }}
         >
-            <Stack.Screen
-                name="index"
-                options={{
-                    title: '',
-                }}
-            />
+            <Stack.Screen name="index" />
         </Stack>
     );
 }
+
