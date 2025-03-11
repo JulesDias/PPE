@@ -44,8 +44,8 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
           <MenuItem label="MON PROFIL" onPress={() => router.push('/UserProfile')} />
           <MenuItem label="MES PROFESSIONNELS DE SANTÉ" onPress={() => router.push('/MesProDeSante')} />
           <MenuItem label="MES RENDEZ-VOUS" onPress={() => router.push('/RendezVous')} />
-          <MenuItem label="MES TRAITEMENTS" />
-          <MenuItem label="MES ANTÉCÉDENTS" onPress={() => router.push('/MesAntecedents')}/>
+          <MenuItem label="MES TRAITEMENTS" onPress={() => router.push('/MesTraitements')} />
+          <MenuItem label="MES ANTÉCÉDENTS" onPress={() => router.push('/MesAntecedents')} />
         </View>
 
         {/* INFORMATIONS & PRÉVENTION */}
@@ -87,19 +87,21 @@ const MenuItem: React.FC<{ label: string; onPress?: () => void }> = ({ label, on
 /* Styles */
 const styles = StyleSheet.create({
   overlay: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Assombrit l’arrière-plan
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    zIndex: 9999, // S'assure qu'elle passe au-dessus des autres éléments
+    elevation: 10, // Utile pour Android
   },
   menu: {
-    width: '80%',
-    height: '100%',
-    backgroundColor: '#F5F5F5',
+    width: "80%",
+    height: "100%",
+    backgroundColor: "#F5F5F5",
     padding: 15,
     borderTopRightRadius: 20,
     borderBottomRightRadius: 20,
