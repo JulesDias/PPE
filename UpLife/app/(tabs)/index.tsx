@@ -4,6 +4,7 @@ import { Entypo } from '@expo/vector-icons';
 import { WebView } from 'react-native-webview';  // Importer WebView
 import Sidebar from '../../components/Sidebar';
 import rdvs from '@/data/rdvs.json';
+import { router } from 'expo-router';
 
 export default function HomePage() {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -29,20 +30,22 @@ export default function HomePage() {
 
       {/* ScrollView pour rendre la page défilable */}
       <ScrollView style={styles.content}>
-        <Section title="🗓️ MES RENDEZ-VOUS">
-          <View style={styles.card}>
-            {nextAppointments.length > 0 ? (
-              nextAppointments.map((rdv, index) => (
-                <View key={index} style={styles.rdvItem}>
-                  <Text style={styles.rdvDate}>{rdv.Date_rdv} - {rdv.Horaire}</Text>
-                  <Text style={styles.rdvText}>{rdv.Intitule}</Text>
-                </View>
-              ))
-            ) : (
-              <Text style={styles.noEvent}>Aucun événement à venir</Text>
-            )}
-          </View>
-        </Section>
+        <TouchableOpacity onPress={() => router.push('/RendezVous')} activeOpacity={0.7}>
+          <Section title="🗓️ MES RENDEZ-VOUS">
+            <View style={styles.card}>
+              {nextAppointments.length > 0 ? (
+                nextAppointments.map((rdv, index) => (
+                  <View key={index} style={styles.rdvItem}>
+                    <Text style={styles.rdvDate}>{rdv.Date_rdv} - {rdv.Horaire}</Text>
+                    <Text style={styles.rdvText}>{rdv.Intitule}</Text>
+                  </View>
+                ))
+              ) : (
+                <Text style={styles.noEvent}>Aucun événement à venir</Text>
+              )}
+            </View>
+          </Section>
+        </TouchableOpacity>
 
         <Section title="💊 MES TRAITEMENTS">
           <View style={styles.card}>
@@ -69,10 +72,11 @@ export default function HomePage() {
   );
 }
 
-
-const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
+const Section: React.FC<{ title: string; children: React.ReactNode; onPress?: () => void }> = ({ title, children, onPress }) => (
   <View style={styles.section}>
-    <Text style={styles.sectionTitle}>{title}</Text>
+    <TouchableOpacity onPress={onPress} disabled={!onPress}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+    </TouchableOpacity>
     {children}
   </View>
 );
@@ -91,14 +95,22 @@ const styles = StyleSheet.create({
   content: { padding: 15 },
   section: { marginBottom: 15 },
   sectionTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 5, color: '#4d7d2f' },
-  card: { backgroundColor: 'white', padding: 15, borderRadius: 10, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 5, elevation: 3 },
+  card: {
+    backgroundColor: '#b6d379',
+    padding: 15,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3
+  },
   rdvItem: { marginBottom: 8 },
-  rdvDate: { fontSize: 14, fontWeight: 'bold', color: 'red' },
+  rdvDate: { fontSize: 14, fontWeight: 'bold', color: 'white' }, // Texte blanc pour meilleur contraste
   rdvText: { fontSize: 14, color: '#26336A' },
-  noEvent: { marginTop: 5, color: '#555' },
+  noEvent: { marginTop: 5, color: 'white' }, // Texte blanc pour contraste
   treatmentRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5 },
-  treatmentTime: { fontWeight: 'bold' },
-  treatmentLabel: { color: '#0077b6' },
+  treatmentTime: { fontWeight: 'bold', color: 'white' }, // Texte blanc
+  treatmentLabel: { color: '#26336A' }, // Texte en bleu foncé pour contraste
   mapContainer: {
     borderRadius: 10,
     overflow: 'hidden',
@@ -107,4 +119,5 @@ const styles = StyleSheet.create({
     marginBottom: 20, // Un peu d'espace sous le widget
   },
 });
+
 
