@@ -41,11 +41,9 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
           <Text style={styles.sectionTitle}>
             <FontAwesome name="heart" size={18} color="black" /> Ma Santé
           </Text>
+          <MenuItem label="MON PROFIL" onPress={() => router.push('/UserProfile')} />
           <MenuItem label="MES PROFESSIONNELS DE SANTÉ" />
-          <MenuItem
-            label="MES RENDEZ-VOUS"
-            onPress={() => router.push('/RendezVous')}
-          />
+          <MenuItem label="MES RENDEZ-VOUS" onPress={() => router.push('/RendezVous')} />
           <MenuItem label="MES TRAITEMENTS" />
           <MenuItem label="MES ANTÉCÉDENTS" />
         </View>
@@ -166,7 +164,7 @@ const styles = StyleSheet.create({
     right: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between', // This ensures items are displayed side by side
+    justifyContent: 'space-between',
   },
   socialIcons: {
     flexDirection: 'row',

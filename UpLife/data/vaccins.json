@@ -1,0 +1,20 @@
+[
+    {
+        "userID": 1,
+        "name": "Hépatite B",
+        "lastDose": "05/09/2021",
+        "nextDose": "12/03/2032"
+    },
+    {
+        "userID": 1,
+        "name": "ROR",
+        "lastDose": "15/07/2005",
+        "nextDose": "05/09/2031"
+    },
+    {
+        "userID": 1,
+        "name": "Covid-19",
+        "lastDose": "20/06/2023",
+        "nextDose": "À jour"
+    }
+]
