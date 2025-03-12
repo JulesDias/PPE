@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { FontAwesome, Entypo } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { supabase } from '@/services/supabase';
 
 interface SidebarProps {
   menuVisible: boolean;
@@ -9,13 +10,47 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
+  const [prenom, setPrenom] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+
+      if (error) {
+        console.error("Erreur de récupération de l'utilisateur:", error.message);
+      } else if (data?.user) {
+        const userEmail = data.user.email;
+        const { data: utilisateurData, error: utilisateurError } = await supabase
+          .from("utilisateurs")
+          .select("Prenom")
+          .eq("Email", userEmail)
+          .single();
+
+        if (utilisateurError) {
+          console.error("Erreur de récupération du prénom:", utilisateurError.message);
+        } else if (utilisateurData) {
+          setPrenom(utilisateurData.Prenom);
+        }
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   if (!menuVisible) return null;
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      router.push('/login');
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error instanceof Error ? error.message : error);
+    }
+  };
 
   return (
     <View style={styles.overlay}>
       <View style={styles.menu}>
-
-        {/* HEADER SECTION */}
         <View style={styles.header}>
           <TouchableOpacity>
             <FontAwesome name="gear" size={24} color="black" />
@@ -25,22 +60,20 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
           </TouchableOpacity>
         </View>
 
-        {/* PROFILE SECTION */}
         <View style={styles.profileContainer}>
           <Image source={{ uri: 'https://via.placeholder.com/50' }} style={styles.profilePic} />
-          <Text style={styles.profileName}>Virginie</Text>
+          <Text style={styles.profileName}>{prenom ? prenom : 'Chargement...'}</Text>
         </View>
 
-        {/* NOTIFICATIONS */}
         <View style={styles.notificationBox}>
           <Text style={styles.notificationText}>NOTIFICATIONS</Text>
         </View>
 
-        {/* MA SANTÉ SECTION */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>
-            <FontAwesome name="heart" size={18} color="black" /> Ma Santé
-          </Text>
+          <View style={styles.sectionTitle}>
+            <FontAwesome name="heart" size={18} color="black" />
+            <Text> Ma Santé</Text>
+          </View>
           <MenuItem label="MON PROFIL" onPress={() => router.push('/UserProfile')} />
           <MenuItem label="MES PROFESSIONNELS DE SANTÉ" onPress={() => router.push('/MesProDeSante')} />
           <MenuItem label="MES RENDEZ-VOUS" onPress={() => router.push('/RendezVous')} />
@@ -48,30 +81,29 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
           <MenuItem label="MES ANTÉCÉDENTS" onPress={() => router.push('/MesAntecedents')} />
         </View>
 
-        {/* INFORMATIONS & PRÉVENTION */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>
-            <FontAwesome name="info-circle" size={18} color="black" /> Informations et Prévention
-          </Text>
+          <View style={styles.sectionTitle}>
+            <FontAwesome name="info-circle" size={18} color="black" />
+            <Text> Informations et Prévention</Text>
+          </View>
           <MenuItem label="PLAN PHARMACIES & URGENCES" onPress={() => router.push('/PlanPharmaUrgence')} />
           <MenuItem label="LA VACCINATION" />
           <MenuItem label="PRÉVENTION & DÉPISTAGES" />
           <MenuItem label="SITES & INFORMATIONS UTILES" onPress={() => router.push('/SiteInfoUtile')} />
         </View>
 
-        {/* SOCIAL & LEGAL (NOW SIDE-BY-SIDE) */}
+        <TouchableOpacity onPress={handleLogout}>
+          <FontAwesome name="sign-out" size={24} color="black" />
+        </TouchableOpacity>
+
         <View style={styles.footer}>
-          {/* SOCIAL ICONS */}
           <View style={styles.socialIcons}>
             <FontAwesome name="linkedin" size={24} color="black" style={styles.icon} />
             <FontAwesome name="instagram" size={24} color="black" style={styles.icon} />
             <FontAwesome name="twitter-square" size={24} color="black" style={styles.icon} />
           </View>
-
-          {/* LEGAL MENTION */}
           <Text style={styles.legalText}>Mentions légales</Text>
         </View>
-
       </View>
     </View>
   );

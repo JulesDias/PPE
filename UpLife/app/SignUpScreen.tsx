@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { router } from 'expo-router';
-
 import {
     View,
     Text,
@@ -9,9 +8,10 @@ import {
     TouchableOpacity,
     ScrollView,
     KeyboardAvoidingView,
-    Platform
+    Platform,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import { supabase } from '@/services/supabase';
 
 export default function InscriptionScreen() {
     const [formData, setFormData] = useState({
@@ -20,17 +20,53 @@ export default function InscriptionScreen() {
         email: '',
         telephone: '',
         motDePasse: '',
-        confirmerMotDePasse: ''
+        confirmerMotDePasse: '',
     });
 
-    const handleSubmit = () => {
-        // Add your form submission logic here
-        console.log(formData);
+    const handleSubmit = async () => {
+        // Vérifier si les mots de passe sont identiques
+        if (formData.motDePasse !== formData.confirmerMotDePasse) {
+            alert('Les mots de passe ne correspondent pas');
+            return;
+        }
+
+        // Insérer l'utilisateur dans Supabase
+        const { error } = await supabase.auth.signUp({
+            email: formData.email,
+            password: formData.motDePasse,
+        });
+
+        if (error) {
+            alert('Erreur lors de l\'inscription: ' + error.message);
+            return;
+        }
+
+        // Insérer les données supplémentaires dans la table 'utilisateurs'
+        const { data, error: insertError } = await supabase
+            .from('utilisateurs')
+            .insert([
+                {
+                    Nom: formData.nom,
+                    Prenom: formData.prenom,
+                    Email: formData.email,
+                    Tel_perso: formData.telephone,
+                },
+            ]);
+
+        if (insertError) {
+            alert('Erreur lors de l\'ajout des informations supplémentaires: ' + insertError.message);
+            return;
+        }
+
+        console.log('Utilisateur ajouté', data);
         router.push({
             pathname: "/suiteSignUp",
             params: { previousFormData: JSON.stringify(formData) }
         });
+    };
 
+    const goToLogin = () => {
+        router.push("/login");
     };
 
     return (
@@ -47,45 +83,46 @@ export default function InscriptionScreen() {
                         <TextInput
                             style={styles.input}
                             placeholder="Nom"
+                            placeholderTextColor="#999"
                             value={formData.nom}
                             onChangeText={(text) => setFormData({ ...formData, nom: text })}
                         />
-
                         <TextInput
                             style={styles.input}
                             placeholder="Prénom"
+                            placeholderTextColor="#999"
                             value={formData.prenom}
                             onChangeText={(text) => setFormData({ ...formData, prenom: text })}
                         />
-
                         <TextInput
                             style={styles.input}
                             placeholder="Email"
+                            placeholderTextColor="#999"
                             keyboardType="email-address"
                             autoCapitalize="none"
                             value={formData.email}
                             onChangeText={(text) => setFormData({ ...formData, email: text })}
                         />
-
                         <TextInput
                             style={styles.input}
                             placeholder="Téléphone"
+                            placeholderTextColor="#999"
                             keyboardType="phone-pad"
                             value={formData.telephone}
                             onChangeText={(text) => setFormData({ ...formData, telephone: text })}
                         />
-
                         <TextInput
                             style={styles.input}
                             placeholder="Mot de passe"
+                            placeholderTextColor="#999"
                             secureTextEntry
                             value={formData.motDePasse}
                             onChangeText={(text) => setFormData({ ...formData, motDePasse: text })}
                         />
-
                         <TextInput
                             style={styles.input}
                             placeholder="Confirmer le mot de passe"
+                            placeholderTextColor="#999"
                             secureTextEntry
                             value={formData.confirmerMotDePasse}
                             onChangeText={(text) => setFormData({ ...formData, confirmerMotDePasse: text })}
@@ -97,6 +134,13 @@ export default function InscriptionScreen() {
                         onPress={handleSubmit}
                     >
                         <AntDesign name="arrowright" size={24} color="white" />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={styles.loginButton}
+                        onPress={goToLogin}
+                    >
+                        <Text style={styles.loginButtonText}>Déjà inscrit ?</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
@@ -121,12 +165,13 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 8,
-        textAlign: 'left',
+        textAlign: 'center',
     },
     subtitle: {
         fontSize: 16,
         color: '#000',
         marginBottom: 30,
+        textAlign: 'center',
     },
     inputContainer: {
         gap: 20,
@@ -138,6 +183,8 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingHorizontal: 15,
         fontSize: 16,
+        marginBottom: 20,
+        color: '#333'
     },
     submitButton: {
         position: 'absolute',
@@ -157,5 +204,17 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
+    },
+    loginButton: {
+        position: 'absolute',
+        bottom: 30,
+        left: 20,
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+    },
+    loginButtonText: {
+        fontSize: 16,
+        color: '#000',
+        textDecorationLine: 'underline',
     },
 });
