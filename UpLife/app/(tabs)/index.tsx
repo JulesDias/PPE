@@ -147,8 +147,8 @@ export default function HomePage() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#EFEFEF' },
-  header: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#b6d379', padding: 15 },
+  container: { flex: 1, backgroundColor: '#f0f0f0' },
+  header: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#233468', padding: 15 },
   headerText: { fontSize: 18, fontWeight: 'bold', color: 'white', marginLeft: 10 },
   content: { padding: 15 },
   bold: { fontWeight: "bold", marginTop: 10, color: 'white' },
@@ -156,26 +156,27 @@ const styles = StyleSheet.create({
   treatmentTitle: { fontWeight: 'bold', marginBottom: 10, color: 'white' },
   mapContainer: { borderRadius: 10, overflow: 'hidden', height: 350, backgroundColor: '#ddd', marginBottom: 20 },
   card: {
-    backgroundColor: '#b6d379',
+    backgroundColor: '#f8c6cd',
     borderRadius: 8,
     padding: 10,
-    marginBottom: 10
+    marginBottom: 10,
+    marginTop: 10
   },
   rdvItem: {
     marginBottom: 5
   },
   rdvDate: {
     fontSize: 15,
-    color: '#fff',
+    color: '#f0f0f0',
     fontWeight: 'bold'
 
   },
   rdvText: {
     fontSize: 14,
-    color: '#fff'
+    color: '#f0f0f0'
   },
   noEvent: {
     fontSize: 14,
-    color: '#000'
+    color: '#f0f0f0'
   }
 });

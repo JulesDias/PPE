@@ -53,10 +53,10 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
           <Text style={styles.sectionTitle}>
             <FontAwesome name="info-circle" size={18} color="black" /> Informations et Prévention
           </Text>
-          <MenuItem label="PLAN PHARMACIES & URGENCES" onPress={() => router.push('/PlanPharmaUrgence')}/>
+          <MenuItem label="PLAN PHARMACIES & URGENCES" onPress={() => router.push('/PlanPharmaUrgence')} />
           <MenuItem label="LA VACCINATION" />
           <MenuItem label="PRÉVENTION & DÉPISTAGES" />
-          <MenuItem label="SITES & INFORMATIONS UTILES" onPress={() => router.push('/SiteInfoUtile')}/>
+          <MenuItem label="SITES & INFORMATIONS UTILES" onPress={() => router.push('/SiteInfoUtile')} />
         </View>
 
         {/* SOCIAL & LEGAL (NOW SIDE-BY-SIDE) */}
@@ -65,7 +65,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
           <View style={styles.socialIcons}>
             <FontAwesome name="linkedin" size={24} color="black" style={styles.icon} />
             <FontAwesome name="instagram" size={24} color="black" style={styles.icon} />
-            <FontAwesome name="twitter" size={24} color="black" style={styles.icon} />
+            <FontAwesome name="twitter-square" size={24} color="black" style={styles.icon} />
           </View>
 
           {/* LEGAL MENTION */}
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   menu: {
     width: "80%",
     height: "100%",
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#93b8d3",
     padding: 15,
     borderTopRightRadius: 20,
     borderBottomRightRadius: 20,

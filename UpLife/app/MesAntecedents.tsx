@@ -126,13 +126,13 @@ const MesAntecedents: React.FC = () => {
       const updated = personnels.map((p) =>
         p.id === editItem.id
           ? {
-              ...p,
-              titre: editItem.titre || '',
-              date: (editItem as AntecedentPersonnel).date || '',
-              traitement: (editItem as AntecedentPersonnel).traitement || '',
-              medecin: (editItem as AntecedentPersonnel).medecin || '',
-              notes: (editItem as AntecedentPersonnel).notes || '',
-            }
+            ...p,
+            titre: editItem.titre || '',
+            date: (editItem as AntecedentPersonnel).date || '',
+            traitement: (editItem as AntecedentPersonnel).traitement || '',
+            medecin: (editItem as AntecedentPersonnel).medecin || '',
+            notes: (editItem as AntecedentPersonnel).notes || '',
+          }
           : p
       );
       setPersonnels(updated);
@@ -145,12 +145,12 @@ const MesAntecedents: React.FC = () => {
       const updated = familiaux.map((f) =>
         f.id === editItem.id
           ? {
-              ...f,
-              titre: editItem.titre || '',
-              membre: (editItem as AntecedentFamilial).membre || '',
-              age_apparition: (editItem as AntecedentFamilial).age_apparition || '',
-              notes: (editItem as AntecedentFamilial).notes || '',
-            }
+            ...f,
+            titre: editItem.titre || '',
+            membre: (editItem as AntecedentFamilial).membre || '',
+            age_apparition: (editItem as AntecedentFamilial).age_apparition || '',
+            notes: (editItem as AntecedentFamilial).notes || '',
+          }
           : f
       );
       setFamiliaux(updated);

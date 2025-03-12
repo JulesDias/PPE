@@ -57,7 +57,7 @@ const GestionRDV = () => {
             </Text>
 
             {/* RAPPELS */}
-            <View style={{ backgroundColor: '#b6d379', padding: 15, borderRadius: 10, marginBottom: 10 }}>
+            <View style={{ backgroundColor: '#233468', padding: 15, borderRadius: 10, marginBottom: 10, marginTop: 20 }}>
                 <Text style={{ fontWeight: 'bold', color: 'white' }}>RAPPELS DES RENDEZ-VOUS À PRENDRE</Text>
                 {rappels.map((rappel) => (
                     <View key={rappel.id} style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -77,13 +77,13 @@ const GestionRDV = () => {
 
             {/* TOGGLE SWITCH AVEC ICÔNES */}
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
-                <Icon name="list" size={24} color={isCalendarView ? "#999" : "#b6d379"} style={{ marginRight: 10 }} />
+                <Icon name="list" size={24} color={isCalendarView ? "#999" : "#233468"} style={{ marginRight: 10 }} />
                 <Switch value={isCalendarView} onValueChange={toggleView} />
-                <Icon name="calendar" size={24} color={isCalendarView ? "#b6d379" : "#999"} style={{ marginLeft: 10 }} />
+                <Icon name="calendar" size={24} color={isCalendarView ? "#233468" : "#999"} style={{ marginLeft: 10 }} />
             </View>
 
             {/* LISTE OU CALENDRIER */}
-            <View style={{ backgroundColor: '#b6d379', padding: 15, borderRadius: 10 }}>
+            <View style={{ backgroundColor: '#233468', padding: 15, borderRadius: 10 }}>
                 {isCalendarView ? (
                     <Calendar
                         markedDates={rdvData.reduce((acc: { [key: string]: { selected: boolean; marked: boolean; selectedColor: string } }, rdv) => {
@@ -101,7 +101,7 @@ const GestionRDV = () => {
                         keyExtractor={(item) => item.Date_rdv}
                         renderItem={({ item }) => (
                             <TouchableOpacity onPress={() => setSelectedRDV(item)}>
-                                <View style={{ padding: 10, marginVertical: 5, backgroundColor: '#b6d379', borderRadius: 5 }}>
+                                <View style={{ padding: 10, marginVertical: 5, backgroundColor: '#233468', borderRadius: 5 }}>
                                     <Text style={{ color: 'white' }}>{item.Date_rdv} - {item.Horaire}</Text>
                                     <Text style={{ color: 'white' }}>{item.Intitule} - Dr. {getMedecinName(item.ID_medecin)}</Text>
                                 </View>

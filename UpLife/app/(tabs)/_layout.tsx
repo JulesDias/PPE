@@ -6,7 +6,7 @@ export default function Layout() {
     return (
         <Stack
             screenOptions={{
-                headerShown: false, // Désactive complètement le header natif
+                headerShown: false,
             }}
         >
             <Stack.Screen name="index" />
