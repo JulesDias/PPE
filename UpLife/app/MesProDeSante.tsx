@@ -62,11 +62,12 @@ export default function MedecinsPage() {
                 <TouchableOpacity onPress={() => setMenuVisible(true)}>
                     <Entypo name="menu" size={30} color="black" />
                 </TouchableOpacity>
-                <Text style={styles.headerText}>MES PROFESSIONNELS DE SANTÉ</Text>
+
                 <TouchableOpacity onPress={() => router.push('/')}>
                     <FontAwesome name="home" size={28} color="black" />
                 </TouchableOpacity>
             </View>
+            <Text style={styles.headerText}>MES PROFESSIONNELS DE SANTÉ</Text>
 
             {/* Liste des médecins */}
             <SectionList
@@ -137,19 +138,22 @@ export default function MedecinsPage() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#F5F5F5' },
+    container: { flex: 1, backgroundColor: '#f0f0f0' },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: 15,
+        padding: 10,
         backgroundColor: 'white',
     },
     headerText: {
-        fontSize: 16,
+        fontSize: 22,
         fontWeight: 'bold',
-        textTransform: 'uppercase',
-        marginTop: 20, // Déplace uniquement le titre plus bas
+        textAlign: 'center',
+        color: '#233468',
+        fontFamily: 'Sora-Medium',
+        marginBottom: 10,
+        marginTop: 10,
     },
     sectionHeader: { backgroundColor: '#93b8d3', padding: 8 },
     sectionHeaderText: { fontSize: 14, fontWeight: 'bold' },
@@ -166,7 +170,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContent: {
-        backgroundColor: 'white',
+        backgroundColor: '#f0f0f0',
         padding: 20,
         borderRadius: 10,
         width: '80%',
@@ -182,7 +186,7 @@ const styles = StyleSheet.create({
     },
     rdvItem: {
         padding: 10,
-        backgroundColor: '#f4f4f4',
+        backgroundColor: '#f0f0f0',
         marginVertical: 5,
         borderRadius: 5,
     },
@@ -198,7 +202,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     closeButtonText: {
-        color: 'white',
+        color: '#f0f0f0',
         fontSize: 16,
     },
 });

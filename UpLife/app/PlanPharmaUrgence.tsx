@@ -26,7 +26,7 @@ const PharmaciesUrgences = () => {
       </TouchableOpacity>
 
       {/* Page Title */}
-      <Text style={styles.pageTitle}>📍 Urgences & Pharmacies</Text>
+      <Text style={styles.pageTitle}>Urgences & Pharmacies</Text>
 
       {/* WebView Map (Only for mobile devices) */}
       {Platform.OS !== 'web' && (
@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
     color: '#233468',
     fontFamily: 'Sora-Medium',
     marginBottom: 20,
+    marginTop: 50,
   },
   mapContainer: {
     flex: 1,
