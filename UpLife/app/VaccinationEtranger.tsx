@@ -32,7 +32,8 @@ const VaccinationEtranger = () => {
       </TouchableOpacity>
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.pageTitle}>LA VACCINATION</Text>
+        <Text style={styles.pageTitle}>Vaccination à l'étranger</Text>
+        <View style={{ height: 20 }} />
         <Text style={styles.text}>Veuillez rechercher un pays:</Text>
 
         <TextInput

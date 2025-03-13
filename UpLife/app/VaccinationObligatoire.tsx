@@ -77,7 +77,8 @@ const VaccinationObligatoire = () => {
             </TouchableOpacity>
       
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.pageTitle}>LA VACCINATION</Text>
+        <Text style={styles.pageTitle}>Vaccination Obligatoire</Text>
+        <View style={{ height: 20 }} />
         <Text style={styles.text}>
           La vaccination en France est destinée à tous quel que soit l’âge, et suit un calendrier mis à jour chaque année par le ministère de la Santé.
         </Text>

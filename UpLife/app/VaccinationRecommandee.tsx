@@ -134,7 +134,8 @@ const VaccinationRecommandee = () => {
             </TouchableOpacity>
       
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.pageTitle}>LA VACCINATION</Text>
+        <Text style={styles.pageTitle}>Vaccination recommandée</Text>
+        <View style={{ height: 20 }} />
         <Text style={styles.text}>
         La vaccination en France concerne tous les âges et suit un calendrier actualisé chaque année par le ministère de la Santé.
         </Text>
