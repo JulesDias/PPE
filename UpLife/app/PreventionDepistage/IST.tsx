@@ -4,15 +4,14 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Sidebar from '@/components/Sidebar';
 import { router } from 'expo-router';
 
-const Vaccination = () => {
+const IST = () => {
   const [menuVisible, setMenuVisible] = useState(false);
 
   // Liste des boutons avec leurs destinations
   const buttons = [
-    { title: 'Obligatoire', route: '/VaccinationObligatoire' },
-    { title: 'Recommandée', route: '/VaccinationRecommandee' },
-    { title: "Je pars à l'étranger", route: '/VaccinationEtranger' },
-    { title: 'Ressources utiles', route: '/VaccinationRessourcesUtiles' }
+    { title: 'Les IST en bref', route: '/ISTenBref' },
+    { title: 'Où se faire dépister ?', route: '/ISTouSeFaireDepister' },
+    { title: 'Ressources utiles', route: '/ISTressourcesUtiles' },
   ];
 
   return (
@@ -30,14 +29,37 @@ const Vaccination = () => {
       </TouchableOpacity>
 
       {/* Page Title */}
-      <Text style={styles.pageTitle}>LA VACCINATION</Text>
+      <Text style={styles.pageTitle}>C'est quoi une IST ?</Text>
+
+      <View style={{ height: 20 }} />
+
+      {/* Information Text */}
+      <Text style={styles.infoText}>
+        Une infection sexuellement transmissible (IST) est causée par des bactéries, virus ou parasites et se transmet lors de rapports sexuels.
+      </Text>
+
+      <Text style={styles.infoText}>
+      Certaines sont asymptomatiques mais peuvent entraîner des complications graves si non traitées.
+      </Text>
+
+      <Text style={styles.infoText}>
+      Se protéger et se dépister régulièrement permet d'éviter la transmission et de préserver sa santé.
+      </Text>
+
+      <View style={{ height: 20 }} />
+
+      {/* Additional Question */}
+      <Text style={styles.boldText}>Que faire en cas d'IST ?</Text>
+      <Text style={styles.infoText}>
+        Consultez un professionnel de santé pour un diagnostic et un traitement adapté.
+      </Text>
 
       {/* Buttons Section */}
       <View style={styles.buttonsContainer}>
         {buttons.map((item, index) => (
-          <TouchableOpacity 
-            key={index} 
-            style={styles.button} 
+          <TouchableOpacity
+            key={index}
+            style={styles.button}
             onPress={() => router.push(item.route as any)}
           >
             <Text style={styles.buttonText}>{item.title}</Text>
@@ -85,8 +107,21 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 60,
   },
+  infoText: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 15,
+    textAlign: 'justify',
+  },
+  boldText: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 15,
+    textAlign: 'justify',
+    fontWeight: 'bold',
+  },
   buttonsContainer: {
-    marginTop: 50,
+    marginTop: 20,
   },
   button: {
     backgroundColor: 'white',
@@ -109,4 +144,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Vaccination;
+export default IST;
