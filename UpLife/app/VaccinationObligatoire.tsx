@@ -88,10 +88,21 @@ const VaccinationObligatoire = () => {
           Les titulaires de l'autorité parentale doivent veiller au respect de cette obligation.
         </Text>
         
+        <Text style={styles.bold}>Vaccinations obligatoires en France (pour les personnes nées avant 2018):</Text>
+
         <TableVaccinationObligation />
+
+        <Text style={styles.italic}>
+        Rappels DTP : recommandés à 25, 45, 65 ans, puis tous les 10 ans.
+        </Text>
         
+        <View style={{ height: 20 }} />
         <Text style={styles.text}>
           Depuis 2018, certaines vaccinations sont devenues obligatoires pour les enfants nés à partir de cette date. Voici le tableau détaillé :
+        </Text>
+
+        <Text style={styles.bold}>
+        Vaccinations obligatoires en France (pour les personnes nées depuis 2018):
         </Text>
         
         <TableVaccinationDetails />
@@ -142,7 +153,18 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
   },
   bold: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 15,
+    textAlign: 'justify',
     fontWeight: 'bold',
+  },
+  italic: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 15,
+    textAlign: 'justify',
+    fontStyle: 'italic',
   },
   tableContainer: {
     marginBottom: 20,
