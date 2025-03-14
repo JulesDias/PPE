@@ -80,7 +80,7 @@ const VaccinationObligatoire = () => {
         <Text style={styles.pageTitle}>Vaccination Obligatoire</Text>
         <View style={{ height: 20 }} />
         <Text style={styles.text}>
-          La vaccination en France est destinée à tous quel que soit l’âge, et suit un calendrier mis à jour chaque année par le ministère de la Santé.
+          La vaccination en France est destinée à tous quel que soit l'âge, et suit un calendrier mis à jour chaque année par le ministère de la Santé.
         </Text>
         <Text style={styles.text}>
           Certaines vaccinations sont <Text style={styles.bold}>obligatoires</Text>, sauf en cas de contre-indications médicales, évaluées par un professionnel de santé.

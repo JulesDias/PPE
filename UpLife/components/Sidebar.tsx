@@ -18,7 +18,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
         {/* HEADER SECTION */}
         <View style={styles.header}>
           <TouchableOpacity>
-            <FontAwesome name="gear" size={24} color="black" />
+            <FontAwesome name="gear" size={24} color="black" onPress={() => router.push('/Reglages/ReglagesAccueil')} />
           </TouchableOpacity>
           <TouchableOpacity onPress={closeMenu}>
             <Entypo name="cross" size={30} color="black" />
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingBottom: 10,
+    paddingBottom: 0,
   },
   profileContainer: {
     alignItems: 'center',

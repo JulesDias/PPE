@@ -33,7 +33,7 @@ const VaccinationRessourcesUtiles = () => {
           <Text style={styles.link}>Institut Pasteur - Calendrier vaccinal : Calendrier des vaccinations à suivre</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => Linking.openURL('https://www.ameli.fr/assure/sante/themes/vaccination/vaccins-obligatoires')}>
-          <Text style={styles.link}>Ameli - Vaccins obligatoires : Liste des vaccins obligatoires selon l’âge et la situation</Text>
+          <Text style={styles.link}>Ameli - Vaccins obligatoires : Liste des vaccins obligatoires selon l'âge et la situation</Text>
         </TouchableOpacity>
 
         <View style={{ height: 20 }} />

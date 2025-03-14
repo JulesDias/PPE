@@ -1,84 +1,110 @@
 [
-    {
-      "nom": "Les chlamydioses",
-      "symptômes": {
-        "Homme": "brûlures en urinant, écoulements",
-        "Femme": "douleurs pelviennes, pertes anormales"
-      },
-      "dépistage": "Test urinaire ou prélèvement, rapide et indolore",
-      "traitement": "Antibiotiques, prescription médicale",
-      "prévention": "Préservatifs, dépistage régulier",
-      "plus d'infos": "https://www.pasteur.fr/fr/centre-medical/fiches-maladies/chlamydiose?language=fr"
+  {
+    "nom": "Les chlamydioses",
+    "symptômes": {
+      "Homme": "brûlures en urinant, écoulements",
+      "Femme": "douleurs pelviennes, pertes anormales"
     },
-    {
-      "nom": "VIH/SIDA",
-      "symptômes": "Fatigue, fièvre prolongée, amaigrissement, infections opportunistes",
-      "dépistage": "Test sanguin rapide ou en laboratoire",
-      "traitement": "Traitement antirétroviral à vie",
-      "prévention": "Préservatifs, PrEP, seringues propres, dépistage régulier",
-      "plus d'infos": "https://www.pasteur.fr/fr/centre-medical/fiches-maladies/sida-vih"
-    },
-    {
-      "nom": "L'herpès génital",
-      "symptômes": "Lésions douloureuses sur les parties génitales, démangeaisons, fièvre",
-      "dépistage": "Examen clinique, test virologique",
-      "traitement": "Antiviraux pour réduire les poussées",
-      "prévention": "Préservatifs, éviter les contacts en cas de poussée",
-      "plus d'infos": "Ameli - Herpès génital"
-    },
-    {
-      "nom": "La syphilis",
-      "symptômes": "Ulcères indolores, éruptions cutanées, atteinte des organes en cas d'évolution",
-      "dépistage": "Test sanguin",
-      "traitement": "Antibiotiques (pénicilline)",
-      "prévention": "Préservatifs, dépistage régulier",
-      "plus d'infos": "OMS - Syphilis"
-    },
-    {
-      "nom": "Papillomavirus humain (HPV)",
-      "symptômes": "Verrues génitales, lésions précancéreuses, parfois asymptomatique",
-      "dépistage": "Frottis cervico-utérin, test HPV",
-      "traitement": "Destruction des lésions, surveillance",
-      "prévention": "Vaccination, préservatifs",
-      "plus d'infos": "Vaccination Info Service - HPV"
-    },
-    {
-      "nom": "L'hépatite B",
-      "symptômes": "Fatigue, jaunisse, douleurs abdominales, nausées",
-      "dépistage": "Test sanguin",
-      "traitement": "Antiviraux, surveillance médicale",
-      "prévention": "Vaccination, préservatifs, matériel stérile",
-      "plus d'infos": "Hépatites Info Service"
-    },
-    {
-      "nom": "La gonorrhée",
-      "symptômes": {
-        "Homme": "Brûlures en urinant, écoulements",
-        "Femme": "Le plus souvent asymptomatique, pertes anormales"
-      },
-      "dépistage": "Prélèvement urétral ou vaginal, test PCR",
-      "traitement": "Antibiotiques",
-      "prévention": "Préservatifs, dépistage régulier",
-      "plus d'infos": "Institut Pasteur - Gonorrhée"
-    },
-    {
-      "nom": "La mycoplasmose",
-      "symptômes": "Douleurs en urinant, écoulements, infections génitales",
-      "dépistage": "Prélèvement urinaire ou génital, test PCR",
-      "traitement": "Antibiotiques",
-      "prévention": "Préservatifs, dépistage en cas de symptômes",
-      "plus d'infos": "Ameli - Mycoplasmose"
-    },
-    {
-      "nom": "La trichomonase",
-      "symptômes": {
-        "Homme": "Souvent asymptomatique, parfois irritation urétrale",
-        "Femme": "Pertes vaginales abondantes, prurit, douleurs en urinant"
-      },
-      "dépistage": "Examen au microscope, test PCR",
-      "traitement": "Antibiotiques (métronidazole)",
-      "prévention": "Préservatifs, dépistage en cas de symptômes",
-      "plus d'infos": "OMS - Trichomonase"
+    "dépistage": "Test urinaire ou prélèvement, rapide et indolore",
+    "traitement": "Antibiotiques, prescription médicale",
+    "prévention": "Préservatifs, dépistage régulier",
+    "plus d'infos": {
+      "alias": "Institut Pasteur - Chlamydiose",
+      "lien": "https://www.pasteur.fr/fr/centre-medical/fiches-maladies/chlamydiose"
     }
-  ]
-  
+  },
+  {
+    "nom": "VIH/SIDA",
+    "symptômes": "Fatigue, fièvre prolongée, amaigrissement, infections opportunistes",
+    "dépistage": "Test sanguin rapide ou en laboratoire",
+    "traitement": "Traitement antirétroviral à vie",
+    "prévention": "Préservatifs, PrEP, seringues propres, dépistage régulier",
+    "plus d'infos": {
+      "alias": "Institut Pasteur - VIH/SIDA",
+      "lien": "https://www.pasteur.fr/fr/centre-medical/fiches-maladies/sida-vih"
+    }
+  },
+  {
+    "nom": "L'herpès génital",
+    "symptômes": "Lésions douloureuses sur les parties génitales, démangeaisons, fièvre",
+    "dépistage": "Examen clinique, test virologique",
+    "traitement": "Antiviraux pour réduire les poussées",
+    "prévention": "Préservatifs, éviter les contacts en cas de poussée",
+    "plus d'infos": {
+      "alias": "Ameli - Herpès génital",
+      "lien": "https://www.ameli.fr/assure/sante/themes/herpes-genital"
+    }
+  },
+  {
+    "nom": "La syphilis",
+    "symptômes": "Ulcères indolores, éruptions cutanées, atteinte des organes en cas d'évolution",
+    "dépistage": "Test sanguin",
+    "traitement": "Antibiotiques (pénicilline)",
+    "prévention": "Préservatifs, dépistage régulier",
+    "plus d'infos": {
+      "alias": "OMS - Syphilis",
+      "lien": "https://www.who.int/fr/news-room/fact-sheets/detail/syphilis"
+    }
+  },
+  {
+    "nom": "Papillomavirus humain (HPV)",
+    "symptômes": "Verrues génitales, lésions précancéreuses, parfois asymptomatique",
+    "dépistage": "Frottis cervico-utérin, test HPV",
+    "traitement": "Destruction des lésions, surveillance",
+    "prévention": "Vaccination, préservatifs",
+    "plus d'infos": {
+      "alias": "Vaccination Info Service - HPV",
+      "lien": "https://vaccination-info-service.fr/Les-maladies-et-leurs-vaccins/Infections-a-Papillomavirus-humains-HPV"
+    }
+  },
+  {
+    "nom": "L'hépatite B",
+    "symptômes": "Fatigue, jaunisse, douleurs abdominales, nausées",
+    "dépistage": "Test sanguin",
+    "traitement": "Antiviraux, surveillance médicale",
+    "prévention": "Vaccination, préservatifs, matériel stérile",
+    "plus d'infos": {
+      "alias": "Hépatites Info Service",
+      "lien": "https://www.hepatites-info-service.org/"
+    }
+  },
+  {
+    "nom": "La gonorrhée",
+    "symptômes": {
+      "Homme": "Brûlures en urinant, écoulements",
+      "Femme": "Le plus souvent asymptomatique, pertes anormales"
+    },
+    "dépistage": "Prélèvement urétral ou vaginal, test PCR",
+    "traitement": "Antibiotiques",
+    "prévention": "Préservatifs, dépistage régulier",
+    "plus d'infos": {
+      "alias": "Institut Pasteur - Gonorrhée",
+      "lien": "https://www.pasteur.fr/fr/centre-medical/fiches-maladies/gonorrhee"
+    }
+  },
+  {
+    "nom": "La mycoplasmose",
+    "symptômes": "Douleurs en urinant, écoulements, infections génitales",
+    "dépistage": "Prélèvement urinaire ou génital, test PCR",
+    "traitement": "Antibiotiques",
+    "prévention": "Préservatifs, dépistage en cas de symptômes",
+    "plus d'infos": {
+      "alias": "Ameli - Mycoplasmose",
+      "lien": "https://www.ameli.fr/assure/sante/themes/mycoplasmose"
+    }
+  },
+  {
+    "nom": "La trichomonase",
+    "symptômes": {
+      "Homme": "Souvent asymptomatique, parfois irritation urétrale",
+      "Femme": "Pertes vaginales abondantes, prurit, douleurs en urinant"
+    },
+    "dépistage": "Examen au microscope, test PCR",
+    "traitement": "Antibiotiques (métronidazole)",
+    "prévention": "Préservatifs, dépistage en cas de symptômes",
+    "plus d'infos": {
+      "alias": "OMS - Trichomonase",
+      "lien": "https://www.who.int/fr/news-room/fact-sheets/detail/trichomoniasis"
+    }
+  }
+]
