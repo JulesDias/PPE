@@ -69,7 +69,10 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
           </View>
 
           {/* LEGAL MENTION */}
-          <Text style={styles.legalText}>Mentions légales</Text>
+          <TouchableOpacity onPress={() => router.push('/Reglages/MentionsLegales')}>
+            <Text style={styles.legalText}>Mentions légales</Text>
+          </TouchableOpacity>
+
         </View>
 
       </View>

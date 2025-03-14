@@ -618,10 +618,11 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#333',
     borderRadius: 4,
     padding: 8,
     marginBottom: 8,
+    color: 'black',
   },
   modalButtons: {
     flexDirection: 'row',

@@ -1,44 +1,59 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Sidebar from '@/components/Sidebar';
 import { router } from 'expo-router';
 
-const Vaccination = () => {
+const ReglagesAccueil = () => {
   const [menuVisible, setMenuVisible] = useState(false);
+
+  // Fonction pour gérer la déconnexion
+  const handleLogout = () => {
+    Alert.alert(
+      "Déconnexion",
+      "Êtes-vous sûr de vouloir vous déconnecter ?",
+      [
+        {
+          text: "Annuler",
+          style: "cancel"
+        },
+        {
+          text: "Déconnexion",
+          onPress: () => router.push('/UserProfile'),
+          style: "destructive"
+        }
+      ]
+    );
+  };
 
   // Liste des boutons avec leurs destinations
   const buttons = [
-    { title: 'Gestion des préferences et notifications', route: '/Reglages/GestionPrefNotif' },
+    { title: 'Gestion des préférences et notifications', route: '/Reglages/GestionPrefNotif' },
     { title: 'Gestion des données personnelles', route: '/Reglages/GestionDonneesPerso' },
-    { title: "Déconnexion", route: '/Reglages/Deconnexion' },
+    { title: "Déconnexion", action: handleLogout },
     { title: 'Supprimer son compte', route: '/Reglages/SuppressionCompte' }
   ];
 
   return (
     <View style={styles.container}>
-      {/* Menu Button */}
       {!menuVisible && (
         <TouchableOpacity onPress={() => setMenuVisible(true)} style={styles.menuButton}>
           <Icon name="bars" size={30} color="white" />
         </TouchableOpacity>
       )}
 
-      {/* Home Button */}
       <TouchableOpacity onPress={() => router.push('/(tabs)')} style={styles.homeButton}>
         <Icon name="home" size={30} color="white" />
       </TouchableOpacity>
 
-      {/* Page Title */}
-      <Text style={styles.pageTitle}>REGLAGES</Text>
+      <Text style={styles.pageTitle}>RÉGLAGES</Text>
 
-      {/* Buttons Section */}
       <View style={styles.buttonsContainer}>
         {buttons.map((item, index) => (
           <TouchableOpacity 
             key={index} 
             style={styles.button} 
-            onPress={() => router.push(item.route as any)}
+            onPress={() => item.action ? item.action() : router.push(item.route as any)}
           >
             <Text style={styles.buttonText}>{item.title}</Text>
             <Icon name="chevron-right" size={16} color="#233468" />
@@ -46,7 +61,6 @@ const Vaccination = () => {
         ))}
       </View>
 
-      {/* Sidebar Component */}
       <Sidebar menuVisible={menuVisible} closeMenu={() => setMenuVisible(false)} />
     </View>
   );
@@ -109,4 +123,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Vaccination;
+export default ReglagesAccueil;
