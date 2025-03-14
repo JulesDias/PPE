@@ -9,9 +9,9 @@ const IST = () => {
 
   // Liste des boutons avec leurs destinations
   const buttons = [
-    { title: 'Les IST en bref', route: '/ISTenBref' },
-    { title: 'Où se faire dépister ?', route: '/ISTouSeFaireDepister' },
-    { title: 'Ressources utiles', route: '/ISTressourcesUtiles' },
+    { title: 'Les IST en bref', route: '/PreventionDepistage/ISTenBref' },
+    { title: 'Où se faire dépister ?', route: '/PreventionDepistage/ISTouSeFaireDepister' },
+    { title: 'Ressources utiles', route: '/PreventionDepistage/ISTressourcesUtiles' },
   ];
 
   return (
