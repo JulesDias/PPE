@@ -10,7 +10,7 @@ const PreventionDepistageAccueil = () => {
   // Liste des boutons avec leurs destinations
   const buttons = [
     { title: 'IST', route: '/PreventionDepistage/IST' },
-    { title: 'Cancers', route: '/PreventionDepistage/Depistage' },
+    { title: 'Cancers', route: '/PreventionDepistage/Cancers' },
   ];
 
   return (

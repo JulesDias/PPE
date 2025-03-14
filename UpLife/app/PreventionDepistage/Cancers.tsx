@@ -1,36 +1,34 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Sidebar from '@/components/Sidebar';
 import { router } from 'expo-router';
-import istData from '@/data/ISTenBrefInfo.json';
+import cancersData from '@/data/cancersInfo.json';
 
-const ISTenBref = () => {
+const Cancers = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [expanded, setExpanded] = useState<ExpandedState>({});
 
-interface ExpandedState {
-    [key: string]: boolean;
-}
-
-interface IST {
+  // Interface mise à jour
+  interface Cancer {
     nom: string;
-    symptômes: string | { Homme: string; Femme: string };
+    symptômes: string; // Changement ici
     dépistage: string;
     traitement: string;
     prévention: string;
     "plus d'infos": string;
-}
+  }
 
-const toggleExpand = (name: string) => {
-    setExpanded((prev: ExpandedState) => ({ ...prev, [name]: !prev[name] }));
-};
+  interface ExpandedState {
+    [key: string]: boolean;
+  }
 
-const openLink = (url: string): void => {
-    if (url) {
-        Linking.openURL(url).catch((err: Error) => console.error("Erreur d'ouverture du lien: ", err));
-    }
-};
+  const toggleExpand = (cancerName: string) => {
+    setExpanded((prev: ExpandedState) => ({
+      ...prev,
+      [cancerName]: !prev[cancerName],
+    }));
+  };
 
   return (
     <View style={styles.container}>
@@ -44,39 +42,42 @@ const openLink = (url: string): void => {
         <Icon name="home" size={30} color="white" />
       </TouchableOpacity>
 
-      <Text style={styles.pageTitle}>Les IST en un coup d'œil</Text>
+      <View style={{ height: 20 }} />
 
-      <ScrollView style={{ marginTop: 20 }}>
-        {istData.map((ist, index) => (
-          <View key={index} style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={() => toggleExpand(ist.nom)}>
-              <Text style={styles.buttonText}>{ist.nom}</Text>
-              <Icon name={expanded[ist.nom] ? 'minus' : 'plus'} size={20} color="#233468" />
+      <Text style={styles.pageTitle}>Mieux comprendre les cancers</Text>
+
+      <View style={{ height: 20 }} />
+
+      <Text style={styles.text}>
+        Le cancer se développe lorsque des cellules anormales se multiplient de manière incontrôlée dans l'organisme.
+        Il peut toucher différents organes et évoluer à des rythmes variés. Un dépistage précoce et un mode de vie sain
+        augmentent les chances de traitement efficace. Retrouvez ici les cancers les plus courants, leurs symptômes et les spécialistes à consulter.
+      </Text>
+
+      <ScrollView style={styles.listContainer}>
+        {cancersData.map((cancer: Cancer, index) => (
+          <View key={index}>
+            <TouchableOpacity style={styles.button} onPress={() => toggleExpand(cancer.nom)}>
+              <Text style={styles.buttonText}>{cancer.nom}</Text>
+              <Icon name={expanded[cancer.nom] ? "minus" : "plus"} size={20} color="#233468" />
             </TouchableOpacity>
-            {expanded[ist.nom] && (
-              <View style={styles.details}>
+
+            {expanded[cancer.nom] && (
+              <View style={styles.detailsContainer}>
                 <Text style={styles.detailTitle}>Symptômes :</Text>
-                {typeof ist.symptômes === 'string' ? (
-                  <Text style={styles.detailText}>{ist.symptômes}</Text>
-                ) : (
-                  <>
-                    <Text style={styles.detailText}>Homme: {ist.symptômes.Homme}</Text>
-                    <Text style={styles.detailText}>Femme: {ist.symptômes.Femme}</Text>
-                  </>
-                )}
+                <Text style={styles.detailText}>{cancer.symptômes}</Text>
 
                 <Text style={styles.detailTitle}>Dépistage :</Text>
-                <Text style={styles.detailText}>{ist.dépistage}</Text>
+                <Text style={styles.detailText}>{cancer.dépistage}</Text>
 
                 <Text style={styles.detailTitle}>Traitement :</Text>
-                <Text style={styles.detailText}>{ist.traitement}</Text>
+                <Text style={styles.detailText}>{cancer.traitement}</Text>
 
                 <Text style={styles.detailTitle}>Prévention :</Text>
-                <Text style={styles.detailText}>{ist.prévention}</Text>
+                <Text style={styles.detailText}>{cancer.prévention}</Text>
 
-                <TouchableOpacity onPress={() => openLink(ist["plus d'infos"]) }>
-                  <Text style={styles.linkText}>Plus d'infos</Text>
-                </TouchableOpacity>
+                <Text style={styles.detailTitle}>Plus d'infos :</Text>
+                <Text style={[styles.detailText, styles.link]}>{cancer["plus d'infos"]}</Text>
               </View>
             )}
           </View>
@@ -117,11 +118,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#233468',
+    fontFamily: 'Sora-Medium',
     marginBottom: 20,
     marginTop: 60,
   },
-  buttonContainer: {
-    marginBottom: 10,
+  text: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 15,
+    textAlign: 'justify',
+  },
+  listContainer: {
+    marginTop: 20,
   },
   button: {
     backgroundColor: 'white',
@@ -130,6 +138,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -141,11 +150,11 @@ const styles = StyleSheet.create({
     color: '#233468',
     fontWeight: '500',
   },
-  details: {
-    backgroundColor: 'white',
-    padding: 15,
+  detailsContainer: {
+    backgroundColor: '#ffffff',
+    padding: 10,
     borderRadius: 10,
-    marginTop: 5,
+    marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -153,7 +162,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   detailTitle: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#233468',
     marginTop: 5,
@@ -161,15 +170,13 @@ const styles = StyleSheet.create({
   detailText: {
     fontSize: 14,
     color: '#333',
-    marginBottom: 5,
+    textAlign: 'justify',
   },
-  linkText: {
-    fontSize: 14,
+  link: {
     color: 'black',
-    marginTop: 5,
     textDecorationLine: 'underline',
     fontStyle: 'italic',
   },
 });
 
-export default ISTenBref;
+export default Cancers;

@@ -1,0 +1,58 @@
+[
+    {
+        "nom": "Cancer du sein",
+        "symptômes": "Homme: (rare) Masse sous le mamelon, sensibilité ou écoulement Femme: Masse dans le sein, modification de la forme ou de la taille, écoulement anormal du mamelon, peau du sein rétractée ou rougeâtre.",
+        "dépistage": "Mammographie tous les deux ans pour les femmes de 50 à 74 ans, ou plus tôt en cas de facteurs de risque. Auto-examen régulier recommandé.",
+        "traitement": "Chirurgie (tumorectomie ou mastectomie), radiothérapie, chimiothérapie, hormonothérapie ou thérapies ciblées selon le type et le stade.",
+        "prévention": "Mode de vie sain, activité physique régulière, limitation de la consommation d'alcool, allaitement, dépistage régulier.",
+        "plus d'infos": "https://www.e-cancer.fr/Patients-et-proches/Les-cancers/Cancer-du-sein"
+    },
+    {
+        "nom": "Cancer du poumon",
+        "symptômes": "Toux persistante, essoufflement, douleurs thoraciques, expectorations sanglantes, fatigue, perte de poids inexpliquée.",
+        "dépistage": "Scanner thoracique à faible dose recommandé pour les personnes à haut risque (fumeurs de longue date).",
+        "traitement": "Chirurgie, radiothérapie, chimiothérapie, immunothérapie ou thérapies ciblées selon le stade.",
+        "prévention": "Arrêt du tabac, réduction de l'exposition aux polluants (amiante, radon), alimentation équilibrée.",
+        "plus d'infos": "https://www.e-cancer.fr/Patients-et-proches/Les-cancers/Cancer-du-poumon"
+    },
+    {
+        "nom": "Cancer de la prostate",
+        "symptômes": "Difficultés à uriner, besoin fréquent d'uriner, sang dans les urines ou le sperme, douleurs osseuses en cas de métastases.",
+        "dépistage": "Dosage du PSA (antigène prostatique spécifique) et toucher rectal à partir de 50 ans selon le risque.",
+        "traitement": "Surveillance active, chirurgie (prostatectomie), radiothérapie, hormonothérapie, chimiothérapie.",
+        "prévention": "Alimentation équilibrée, activité physique, réduction de la consommation de graisses animales.",
+        "plus d'infos": "https://www.e-cancer.fr/Patients-et-proches/Les-cancers/Cancer-de-la-prostate"
+    },
+    {
+        "nom": "Cancer colorectal",
+        "symptômes": "Sang dans les selles, modifications du transit intestinal, douleurs abdominales, fatigue, perte de poids inexpliquée.",
+        "dépistage": "Test immunologique fécal tous les 2 ans dès 50 ans. Coloscopie en cas de test positif.",
+        "traitement": "Chirurgie, radiothérapie, chimiothérapie, thérapies ciblées.",
+        "prévention": "Alimentation riche en fibres, activité physique, limitation de la consommation de viandes rouges et d'alcool.",
+        "plus d'infos": "https://www.e-cancer.fr/Patients-et-proches/Les-cancers/Cancer-colorectal"
+    },
+    {
+        "nom": "Cancer du col de l'utérus",
+        "symptômes": "Saignements anormaux, douleurs pelviennes, pertes vaginales inhabituelles.",
+        "dépistage": "Frottis cervical tous les 3 ans dès 25 ans, test HPV dès 30 ans.",
+        "traitement": "Chirurgie, radiothérapie, chimiothérapie, thérapies ciblées.",
+        "prévention": "Vaccination contre le HPV, dépistage régulier, usage du préservatif.",
+        "plus d'infos": "https://www.e-cancer.fr/Patients-et-proches/Les-cancers/Cancer-du-col-de-l-uterus"
+    },
+    {
+        "nom": "Cancer de la thyroïde",
+        "symptômes": "Masse dans le cou, difficulté à avaler, enrouement, douleurs cervicales.",
+        "dépistage": "Palpation du cou, échographie thyroïdienne si suspicion.",
+        "traitement": "Chirurgie, traitement à l'iode radioactif, hormonothérapie, radiothérapie.",
+        "prévention": "Éviter l'exposition aux radiations, surveillance en cas d'antécédents familiaux.",
+        "plus d'infos": "https://www.e-cancer.fr/Patients-et-proches/Les-cancers/Cancer-de-la-thyroide"
+    },
+    {
+        "nom": "Cancer de l'estomac",
+        "symptômes": "Douleurs abdominales, nausées, perte d'appétit, fatigue, vomissements sanglants.",
+        "dépistage": "Endoscopie digestive haute en cas de symptômes persistants.",
+        "traitement": "Chirurgie, chimiothérapie, radiothérapie, thérapies ciblées.",
+        "prévention": "Éviter l'excès de sel et d'aliments fumés, alimentation riche en fruits et légumes, éradication de Helicobacter pylori en cas d'infection.",
+        "plus d'infos": "https://www.e-cancer.fr/Patients-et-proches/Les-cancers/Cancer-de-l-estomac"
+    }
+]
