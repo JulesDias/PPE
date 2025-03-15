@@ -106,27 +106,29 @@ export default function HomePage() {
         </TouchableOpacity>
 
         {/* MES TRAITEMENTS */}
-        <Section title="💊 MES TRAITEMENTS">
-          <View style={styles.card}>
-            <Text style={styles.treatmentTitle}>Rappel - Aujourd’hui, {moment().format('DD MMMM')}</Text>
-            {Object.entries(traitementsDuJour).map(([periode, items]) => (
-              <View key={periode}>
-                <Text style={styles.bold}>{periode.charAt(0).toUpperCase() + periode.slice(1)} :</Text>
-                {items.length > 0 ? (
-                  items.map((t) => (
-                    <View key={t.id} style={styles.checkboxContainer}>
-                      <Checkbox
-                        status={checkedItems[t.id] ? 'checked' : 'unchecked'}
-                        onPress={() => handleCheckboxChange(t.id.toString())}
-                      />
-                      <Text> {t.nom} / {moment(t.heure, "HH:mm").format("HH[h]mm")}</Text>
-                    </View>
-                  ))
-                ) : <Text>Aucun</Text>}
-              </View>
-            ))}
-          </View>
-        </Section>
+        <TouchableOpacity onPress={() => router.push('/MesTraitements')} activeOpacity={0.7}>
+          <Section title="💊 MES TRAITEMENTS">
+            <View style={styles.card}>
+              <Text style={styles.treatmentTitle}>Rappel - Aujourd’hui, {moment().format('DD MMMM')}</Text>
+              {Object.entries(traitementsDuJour).map(([periode, items]) => (
+                <View key={periode}>
+                  <Text style={styles.bold}>{periode.charAt(0).toUpperCase() + periode.slice(1)} :</Text>
+                  {items.length > 0 ? (
+                    items.map((t) => (
+                      <View key={t.id} style={styles.checkboxContainer}>
+                        <Checkbox
+                          status={checkedItems[t.id] ? 'checked' : 'unchecked'}
+                          onPress={() => handleCheckboxChange(t.id.toString())}
+                        />
+                        <Text> {t.nom} / {moment(t.heure, "HH:mm").format("HH[h]mm")}</Text>
+                      </View>
+                    ))
+                  ) : <Text>Aucun</Text>}
+                </View>
+              ))}
+            </View>
+          </Section>
+        </TouchableOpacity>
 
         {/* URGENCES & PHARMACIES */}
         {Platform.OS !== 'web' && (
