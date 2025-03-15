@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Linking } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Sidebar from '@/components/Sidebar';
 import { router } from 'expo-router';
@@ -30,13 +30,18 @@ const Cancers = () => {
     }));
   };
 
+  const openLink = (url: string): void => {
+      if (url) {
+          Linking.openURL(url).catch((err: Error) => console.error("Erreur d'ouverture du lien: ", err));
+      }
+  };
+
   return (
     <View style={styles.container}>
-      {!menuVisible && (
-        <TouchableOpacity onPress={() => setMenuVisible(true)} style={styles.menuButton}>
-          <Icon name="bars" size={30} color="white" />
-        </TouchableOpacity>
-      )}
+      {/* Back Button */}
+      <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <Icon name="arrow-left" size={30} color="white" />
+      </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push('/(tabs)')} style={styles.homeButton}>
         <Icon name="home" size={30} color="white" />
@@ -76,8 +81,10 @@ const Cancers = () => {
                 <Text style={styles.detailTitle}>Prévention :</Text>
                 <Text style={styles.detailText}>{cancer.prévention}</Text>
 
-                <Text style={styles.detailTitle}>Plus d'infos :</Text>
-                <Text style={[styles.detailText, styles.link]}>{cancer["plus d'infos"]}</Text>
+                <TouchableOpacity onPress={() => openLink(typeof cancer["plus d'infos"] === 'string' ? cancer["plus d'infos"] : cancer["plus d'infos"]) }>
+                  <Text style={styles.link}>Plus d'infos</Text>
+                </TouchableOpacity>
+                
               </View>
             )}
           </View>
@@ -95,7 +102,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     padding: 20,
   },
-  menuButton: {
+  backButton: {
     position: 'absolute',
     top: 15,
     left: 15,

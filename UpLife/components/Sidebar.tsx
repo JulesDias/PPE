@@ -32,9 +32,12 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
         </View>
 
         {/* NOTIFICATIONS */}
-        <View style={styles.notificationBox}>
-          <Text style={styles.notificationText}>NOTIFICATIONS</Text>
-        </View>
+        <TouchableOpacity onPress={() => router.push('/Reglages/GestionPrefNotif')}>
+          <View style={styles.notificationBox}>
+            <Text style={styles.notificationText}>NOTIFICATIONS</Text>
+          </View>
+        </TouchableOpacity>
+        
 
         {/* MA SANTÉ SECTION */}
         <View style={styles.section}>

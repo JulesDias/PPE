@@ -602,6 +602,8 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontFamily: 'Sora-Medium',
     fontWeight: 'bold',
+    fontSize: 18,
+    textAlign:'center',
     color: '#233468',
     marginBottom: 10
   },

@@ -34,11 +34,10 @@ const openLink = (url: string): void => {
 
   return (
     <View style={styles.container}>
-      {!menuVisible && (
-        <TouchableOpacity onPress={() => setMenuVisible(true)} style={styles.menuButton}>
-          <Icon name="bars" size={30} color="white" />
-        </TouchableOpacity>
-      )}
+      {/* Back Button */}
+      <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <Icon name="arrow-left" size={30} color="white" />
+      </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push('/(tabs)')} style={styles.homeButton}>
         <Icon name="home" size={30} color="white" />
@@ -74,7 +73,7 @@ const openLink = (url: string): void => {
                 <Text style={styles.detailTitle}>Prévention :</Text>
                 <Text style={styles.detailText}>{ist.prévention}</Text>
 
-                <TouchableOpacity onPress={() => openLink(ist["plus d'infos"]) }>
+                <TouchableOpacity onPress={() => openLink(typeof ist["plus d'infos"] === 'string' ? ist["plus d'infos"] : ist["plus d'infos"].lien) }>
                   <Text style={styles.linkText}>Plus d'infos</Text>
                 </TouchableOpacity>
               </View>
@@ -94,7 +93,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     padding: 20,
   },
-  menuButton: {
+  backButton: {
     position: 'absolute',
     top: 15,
     left: 15,

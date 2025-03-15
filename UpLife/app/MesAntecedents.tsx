@@ -404,30 +404,35 @@ const MesAntecedents: React.FC = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="Titre"
+                  placeholderTextColor="grey"
                   value={newItem.titre || ''}
                   onChangeText={(text) => setNewItem({ ...newItem, titre: text })}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="Date"
+                  placeholderTextColor="grey"
                   value={(newItem as AntecedentPersonnel).date || ''}
                   onChangeText={(text) => setNewItem({ ...newItem, date: text })}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="Traitement"
+                  placeholderTextColor="grey"
                   value={(newItem as AntecedentPersonnel).traitement || ''}
                   onChangeText={(text) => setNewItem({ ...newItem, traitement: text })}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="Médecin"
+                  placeholderTextColor="grey"
                   value={(newItem as AntecedentPersonnel).medecin || ''}
                   onChangeText={(text) => setNewItem({ ...newItem, medecin: text })}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="Notes"
+                  placeholderTextColor="grey"
                   value={(newItem as AntecedentPersonnel).notes || ''}
                   onChangeText={(text) => setNewItem({ ...newItem, notes: text })}
                 />
@@ -440,6 +445,7 @@ const MesAntecedents: React.FC = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="Titre"
+                  placeholderTextColor="grey"
                   value={newItem.titre || ''}
                   onChangeText={(text) => setNewItem({ ...newItem, titre: text })}
                 />
@@ -622,7 +628,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     padding: 8,
     marginBottom: 8,
-    color: 'black',
   },
   modalButtons: {
     flexDirection: 'row',

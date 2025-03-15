@@ -16,12 +16,10 @@ const IST = () => {
 
   return (
     <View style={styles.container}>
-      {/* Menu Button */}
-      {!menuVisible && (
-        <TouchableOpacity onPress={() => setMenuVisible(true)} style={styles.menuButton}>
-          <Icon name="bars" size={30} color="white" />
-        </TouchableOpacity>
-      )}
+      {/* Back Button */}
+            <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+              <Icon name="arrow-left" size={30} color="white" />
+            </TouchableOpacity>
 
       {/* Home Button */}
       <TouchableOpacity onPress={() => router.push('/(tabs)')} style={styles.homeButton}>
@@ -80,7 +78,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     padding: 20,
   },
-  menuButton: {
+  backButton: {
     position: 'absolute',
     top: 15,
     left: 15,

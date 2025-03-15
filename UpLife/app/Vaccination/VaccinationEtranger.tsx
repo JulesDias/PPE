@@ -38,6 +38,7 @@ const VaccinationEtranger = () => {
 
         <TextInput
           placeholder="Rechercher un pays..."
+          placeholderTextColor="grey"
           onChangeText={handleSearch}
           value={search}
           style={styles.searchBar}
