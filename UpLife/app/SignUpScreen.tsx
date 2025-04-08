@@ -24,28 +24,33 @@ export default function InscriptionScreen() {
     });
 
     const handleSubmit = async () => {
-        // Vérifier si les mots de passe sont identiques
         if (formData.motDePasse !== formData.confirmerMotDePasse) {
             alert('Les mots de passe ne correspondent pas');
             return;
         }
 
-        // Insérer l'utilisateur dans Supabase
-        const { error } = await supabase.auth.signUp({
+        const { data: authData, error: authError } = await supabase.auth.signUp({
             email: formData.email,
             password: formData.motDePasse,
         });
 
-        if (error) {
-            alert('Erreur lors de l\'inscription: ' + error.message);
+        if (authError) {
+            alert('Erreur lors de l\'inscription: ' + authError.message);
             return;
         }
 
-        // Insérer les données supplémentaires dans la table 'utilisateurs'
+        const userId = authData.user?.id;
+
+        if (!userId) {
+            alert("Impossible de récupérer l'ID utilisateur.");
+            return;
+        }
+
         const { data, error: insertError } = await supabase
             .from('utilisateurs')
             .insert([
                 {
+                    id: userId, // Liaison avec Supabase Auth
                     Nom: formData.nom,
                     Prenom: formData.prenom,
                     Email: formData.email,

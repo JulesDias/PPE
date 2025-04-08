@@ -14,16 +14,23 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
 
       if (error) {
         console.error("Erreur de récupération de l'utilisateur:", error.message);
-      } else if (data?.user) {
-        const userEmail = data.user.email;
+        return;
+      }
+
+      if (user) {
+        const userId = user.id;
+
         const { data: utilisateurData, error: utilisateurError } = await supabase
           .from("utilisateurs")
           .select("Prenom")
-          .eq("Email", userEmail)
+          .eq("id", userId)
           .single();
 
         if (utilisateurError) {
@@ -116,7 +123,6 @@ const MenuItem: React.FC<{ label: string; onPress?: () => void }> = ({ label, on
   </TouchableOpacity>
 );
 
-/* Styles */
 const styles = StyleSheet.create({
   overlay: {
     position: "absolute",
@@ -124,11 +130,11 @@ const styles = StyleSheet.create({
     left: 0,
     width: "100%",
     height: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Assombrit l’arrière-plan
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    zIndex: 9999, // S'assure qu'elle passe au-dessus des autres éléments
-    elevation: 10, // Utile pour Android
+    zIndex: 9999,
+    elevation: 10,
   },
   menu: {
     width: "80%",
