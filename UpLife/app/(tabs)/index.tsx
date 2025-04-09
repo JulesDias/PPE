@@ -10,6 +10,7 @@ import moment from 'moment';
 import 'moment/locale/fr';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Checkbox } from 'react-native-paper';
+import { supabase } from '@/services/supabase';
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -25,8 +26,37 @@ export default function HomePage() {
   const [nextAppointments, setNextAppointments] = useState<{ Date_rdv: string; Horaire: string; Intitule: string }[]>([]);
   const [traitementsDuJour, setTraitementsDuJour] = useState<{ matin: any[], midi: any[], soir: any[] }>({ matin: [], midi: [], soir: [] });
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
+  const [prenom, setPrenom] = useState<string | null>(null);
 
   useEffect(() => {
+    const fetchUser = async () => {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+
+      if (error) {
+        console.error("Erreur de récupération de l'utilisateur:", error.message);
+        return;
+      }
+
+      if (user) {
+        const userId = user.id;
+
+        const { data: utilisateurData, error: utilisateurError } = await supabase
+          .from("utilisateurs")
+          .select("Prenom")
+          .eq("id", userId)
+          .single();
+
+        if (utilisateurError) {
+          console.error("Erreur de récupération du prénom:", utilisateurError.message);
+        } else if (utilisateurData) {
+          setPrenom(utilisateurData.Prenom);
+        }
+      }
+    };
+    fetchUser();
     moment.locale('fr');
     loadCheckedItems();
 
@@ -83,7 +113,7 @@ export default function HomePage() {
         <TouchableOpacity onPress={() => setMenuVisible(true)}>
           <Entypo name="menu" size={50} color="white" />
         </TouchableOpacity>
-        <Text style={styles.headerText}>Bonjour Virginie !</Text>
+        <Text style={styles.headerText}>Bonjour {prenom} !</Text>
       </View>
 
       <ScrollView style={styles.content}>
@@ -149,12 +179,12 @@ export default function HomePage() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f0f0f0' },
   header: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#233468', padding: 15 },
-  headerText: { fontSize: 18, fontWeight: 'bold', color: 'white', marginLeft: 10 },
+  headerText: { fontSize: 22, fontWeight: 'bold', color: 'white', marginLeft: 10 },
   content: { padding: 15 },
   bold: { fontWeight: "bold", marginTop: 10, color: 'white' },
   checkboxContainer: { flexDirection: "row", alignItems: "center", marginBottom: 5 },
   treatmentTitle: { fontWeight: 'bold', marginBottom: 10, color: 'white' },
-  mapContainer: { borderRadius: 10, overflow: 'hidden', height: 350, backgroundColor: '#ddd', marginBottom: 20 },
+  mapContainer: { borderRadius: 10, overflow: 'hidden', height: 350, backgroundColor: '#ddd', marginBottom: 20},
   card: {
     backgroundColor: '#f8c6cd',
     borderRadius: 8,
