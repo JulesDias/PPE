@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, SectionList, StyleSheet, Modal, FlatList } from 'react-native';
-import { Entypo, FontAwesome } from '@expo/vector-icons';
+import { Entypo, FontAwesome, FontAwesome as Icon } from '@expo/vector-icons';
 import Sidebar from '@/components/Sidebar';
 import medecinsData from '@/data/medecins.json';
 import rdvsData from '@/data/rdvs.json';  // Importation des données des rendez-vous
 import { router } from 'expo-router';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function MedecinsPage() {
     const [menuVisible, setMenuVisible] = useState(false);
@@ -57,19 +58,22 @@ export default function MedecinsPage() {
 
     return (
         <View style={styles.container}>
-            {/* Header */}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => setMenuVisible(true)}>
-                    <Entypo name="menu" size={30} color="black" />
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => router.push('/')}>
-                    <FontAwesome name="home" size={28} color="black" />
-                </TouchableOpacity>
-            </View>
-            <Text style={styles.headerText}>MES PROFESSIONNELS DE SANTÉ</Text>
+            {/* Bouton Menu*/}
+            {!menuVisible && (
+            <TouchableOpacity onPress={() => setMenuVisible(true)} style={{ position: 'absolute', top: 15, left: 15, zIndex: 10 }}>
+                <Icon name="bars" size={30} color="black" />
+            </TouchableOpacity>
+            )}
+    
+            {/* Home Button */}
+            <TouchableOpacity onPress={() => router.push('/(tabs)')} style={{ position: 'absolute', top: 15, right: 15, zIndex: 10 }}>
+            <Icon name="home" size={30} color="black" />
+            </TouchableOpacity>
+            
+            <Text style={styles.pageTitle}>MES PROFESSIONNELS DE SANTÉ</Text>
 
             {/* Liste des médecins */}
+            
             <SectionList
                 style={styles.sectionList}
                 sections={medecins}
@@ -138,7 +142,7 @@ export default function MedecinsPage() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#f0f0f0' },
+    container: { padding: 20, backgroundColor: '#fff' , flex:1},
     header: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -204,5 +208,14 @@ const styles = StyleSheet.create({
     closeButtonText: {
         color: '#f0f0f0',
         fontSize: 16,
+    },
+    pageTitle: {
+      fontSize: 22,
+      fontWeight: 'bold',
+      textAlign: 'center',
+      color: '#233468',
+      fontFamily: 'Sora-Medium',
+      marginBottom: 5,
+      marginTop: 50,
     },
 });

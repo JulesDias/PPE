@@ -154,8 +154,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   profilePic: {
-    width: 60,
-    height: 60,
+    width: 20,
+    height: 20,
     borderRadius: 30,
   },
   profileName: {
