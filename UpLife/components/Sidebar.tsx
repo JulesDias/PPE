@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Linking } from 'react-native';
 import { FontAwesome, Entypo } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { supabase } from '@/services/supabase';
@@ -60,7 +60,7 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
       <View style={styles.menu}>
         <View style={styles.header}>
           <TouchableOpacity>
-            <FontAwesome name="gear" size={24} color="black" />
+            <FontAwesome name="gear" size={24} color="black" onPress={() => router.push('/Reglages/ReglagesAccueil')} />
           </TouchableOpacity>
           <TouchableOpacity onPress={closeMenu}>
             <Entypo name="cross" size={30} color="black" />
@@ -94,8 +94,8 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
             <Text> Informations et Prévention</Text>
           </View>
           <MenuItem label="PLAN PHARMACIES & URGENCES" onPress={() => router.push('/PlanPharmaUrgence')} />
-          <MenuItem label="LA VACCINATION" />
-          <MenuItem label="PRÉVENTION & DÉPISTAGES" />
+          <MenuItem label="LA VACCINATION" onPress={() => router.push('/Vaccination/VaccinationAccueil')}/>
+          <MenuItem label="PRÉVENTION & DÉPISTAGES" onPress={() => router.push('/PreventionDepistage/PreventionDepistageAccueil')}/>
           <MenuItem label="SITES & INFORMATIONS UTILES" onPress={() => router.push('/SiteInfoUtile')} />
         </View>
 
@@ -105,11 +105,11 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
 
         <View style={styles.footer}>
           <View style={styles.socialIcons}>
-            <FontAwesome name="linkedin" size={24} color="black" style={styles.icon} />
-            <FontAwesome name="instagram" size={24} color="black" style={styles.icon} />
-            <FontAwesome name="twitter-square" size={24} color="black" style={styles.icon} />
+            <TouchableOpacity onPress={() => Linking.openURL('https://www.linkedin.com/company/ececook')}><FontAwesome name="linkedin" size={24} color="black" style={styles.icon} /></TouchableOpacity>
+            <TouchableOpacity onPress={() => Linking.openURL('https://www.instagram.com/ececook/#')}><FontAwesome name="instagram" size={24} color="black" style={styles.icon} /></TouchableOpacity>
+            <TouchableOpacity onPress={() => Linking.openURL('https://www.youtube.com/watch?v=xvFZjo5PgG0')}><FontAwesome name="twitter-square" size={24} color="black" style={styles.icon} /></TouchableOpacity>
           </View>
-          <Text style={styles.legalText}>Mentions légales</Text>
+          <TouchableOpacity onPress={() => router.push('/Reglages/MentionsLegales')}><Text style={styles.legalText}>Mentions légales</Text></TouchableOpacity>
         </View>
       </View>
     </View>

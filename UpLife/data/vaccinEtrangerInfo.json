@@ -1,0 +1,130 @@
+[
+  {
+    "pays": "France",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour."
+  },
+  {
+    "pays": "Espagne",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour."
+  },
+  {
+    "pays": "États-Unis",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour."
+  },
+  {
+    "pays": "Chine",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Hépatite A\n- Encéphalite japonaise\n- Encéphalite à tiques\n- Hépatite B\n- Rage\n- Typhoïde."
+  },
+  {
+    "pays": "Italie",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour."
+  },
+  {
+    "pays": "Turquie",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Hépatite A\n- Hépatite B\n- Rage\n- Typhoïde."
+  },
+  {
+    "pays": "Mexique",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Hépatite A\n- Hépatite B\n- Rage\n- Typhoïde."
+  },
+  {
+    "pays": "Thaïlande",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Hépatite A\n- Encéphalite japonaise\n- Hépatite B\n- Rage\n- Typhoïde\n- Fièvre jaune\n- Paludisme."
+  },
+  {
+    "pays": "Royaume-Uni",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour."
+  },
+  {
+    "pays": "Grèce",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Hépatite A\n- Paludisme."
+  },
+  {
+    "pays": "Russie",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Hépatite A\n- Hépatite B\n- Rage\n- Typhoïde\n- Encéphalite à tiques."
+  },
+  {
+    "pays": "Malaisie",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Hépatite A\n- Encéphalite japonaise\n- Hépatite B\n- Rage\n- Typhoïde."
+  },
+  {
+    "pays": "Japon",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Hépatite A\n- Encéphalite japonaise\n- Hépatite B\n- Typhoïde."
+  },
+  {
+    "pays": "Autriche",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Encéphalite à tiques."
+  },
+  {
+    "pays": "Canada",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour."
+  },
+  {
+    "pays": "Australie",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Encéphalite japonaise."
+  },
+  {
+    "pays": "Suisse",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Encéphalite à tiques."
+  },
+  {
+    "pays": "Brésil",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Hépatite A\n- Fièvre jaune\n- Hépatite B\n- Rage\n- Typhoïde\n- Paludisme."
+  },
+  {
+    "pays": "Égypte",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Hépatite A\n- Hépatite B\n- Rage\n- Typhoïde."
+  },
+  {
+    "pays": "Inde",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Hépatite A\n- Encéphalite japonaise\n- Hépatite B\n- Rage\n- Typhoïde\n- Fièvre jaune\n- Poliomyélite."
+  },
+  {
+    "pays": "Vietnam",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Hépatite A\n- Hépatite B\n- Encéphalite japonaise\n- Rage\n- Typhoïde\n- Paludisme."
+  },
+  {
+    "pays": "Argentine",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Hépatite A\n- Fièvre jaune\n- Hépatite B\n- Rage."
+  },
+  {
+    "pays": "Afrique du Sud",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Hépatite A\n- Hépatite B\n- Rage\n- Typhoïde\n- Paludisme."
+  },
+  {
+    "pays": "Émirats arabes unis",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Hépatite A\n- Hépatite B\n- Rage\n- Typhoïde."
+  },
+  {
+    "pays": "Philippines",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour.\n- Hépatite A\n- Encéphalite japonaise\n- Fièvre jaune\n- Hépatite B\n- Rage\n- Typhoïde\n- Paludisme."
+  },
+  {
+    "pays": "Colombie",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour."
+  },
+  {
+    "pays": "Chili",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour."
+  },
+  {
+    "pays": "Maroc",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour."
+  },
+  {
+    "pays": "Irlande",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour."
+  },
+  {
+    "pays": "Kenya",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour."
+  },
+  {
+    "pays": "Suède",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour."
+  },
+  {
+    "pays": "Norvège",
+    "recommandations": "Vaccinations incluses dans le calendrier vaccinal à mettre à jour."
+  }
+]
