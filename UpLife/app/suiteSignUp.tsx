@@ -6,12 +6,25 @@ import { TextInput, GestureHandlerRootView } from "react-native-gesture-handler"
 import { Calendar } from "react-native-calendars";
 import { supabase } from "@/services/supabase"; // Assurez-vous d'avoir correctement configuré Supabase
 
+function calculerAge(dateNaissance: Date): number {
+    const aujourdHui = new Date();
+    let age = aujourdHui.getFullYear() - dateNaissance.getFullYear();
+    const mois = aujourdHui.getMonth() - dateNaissance.getMonth();
+
+    if (mois < 0 || (mois === 0 && aujourdHui.getDate() < dateNaissance.getDate())) {
+        age--;
+    }
+
+    return age;
+}
+
 export default function SuiteSignUp() {
     const [formData, setFormData] = useState({
         dateNaissance: new Date(),
         sexe: "",
         poids: "",
         taille: "",
+        G_sanguin: "",
     });
 
     const [showCalendar, setShowCalendar] = useState(false);
@@ -27,6 +40,7 @@ export default function SuiteSignUp() {
             ...previousFormData,
             ...formData,
             dateNaissance: formData.dateNaissance.toISOString().split("T")[0], // Format YYYY-MM-DD
+            Age: calculerAge(formData.dateNaissance),
         };
 
         // Enregistrer les données finales dans Supabase
@@ -37,6 +51,8 @@ export default function SuiteSignUp() {
                 Sexe: allData.sexe,
                 Poids: allData.poids,
                 Taille: allData.taille,
+                G_sanguin: allData.G_sanguin,
+                Age: allData.Age,
             })
             .eq("Email", previousFormData.email); // Utiliser l'email pour identifier l'utilisateur
 
@@ -151,6 +167,19 @@ export default function SuiteSignUp() {
                                     placeholder="Entrez votre taille"
                                 />
                                 <Text style={styles.unit}>cm</Text>
+                            </View>
+                        </View>
+
+                        {/* Groupe Sanguin */}
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Groupe sanguin</Text>
+                            <View style={styles.input}>
+                                <TextInput
+                                    style={styles.inputText}
+                                    value={formData.G_sanguin}
+                                    onChangeText={(text) => setFormData({ ...formData, G_sanguin: text })}
+                                    placeholder="Ex : A+, O-, AB+..."
+                                />
                             </View>
                         </View>
                     </View>

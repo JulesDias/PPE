@@ -140,13 +140,6 @@ export default function InscriptionScreen() {
                     >
                         <AntDesign name="arrowright" size={24} color="white" />
                     </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={styles.loginButton}
-                        onPress={goToLogin}
-                    >
-                        <Text style={styles.loginButtonText}>Déjà inscrit ?</Text>
-                    </TouchableOpacity>
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>
