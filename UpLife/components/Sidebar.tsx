@@ -94,8 +94,8 @@ const Sidebar: React.FC<SidebarProps> = ({ menuVisible, closeMenu }) => {
             <Text> Informations et Prévention</Text>
           </View>
           <MenuItem label="PLAN PHARMACIES & URGENCES" onPress={() => router.push('/PlanPharmaUrgence')} />
-          <MenuItem label="LA VACCINATION" onPress={() => router.push('/Vaccination/VaccinationAccueil')}/>
-          <MenuItem label="PRÉVENTION & DÉPISTAGES" onPress={() => router.push('/PreventionDepistage/PreventionDepistageAccueil')}/>
+          <MenuItem label="LA VACCINATION" onPress={() => router.push('/Vaccination/VaccinationAccueil')} />
+          <MenuItem label="PRÉVENTION & DÉPISTAGES" onPress={() => router.push('/PreventionDepistage/PreventionDepistageAccueil')} />
           <MenuItem label="SITES & INFORMATIONS UTILES" onPress={() => router.push('/SiteInfoUtile')} />
         </View>
 
