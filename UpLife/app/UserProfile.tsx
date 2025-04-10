@@ -116,10 +116,7 @@ export default function ProfileScreen() {
         <View style={styles.section}>
             <Text style={styles.sectionTitle}>Mes données de santé</Text>
             <ProfileField label="Date de Naissance" value={userData.D_naissance} />
-            <ProfileField
-              label="Sexe"
-              value={userData.Sexe === 'F' ? 'Femme' : 'Homme'}
-            />
+            <ProfileField label="Sexe" value={userData.Sexe}/>
             <ProfileField label="Poids" value={`${userData.Poids} kg`} />
             <ProfileField label="Taille" value={`${userData.Taille} cm`} />
             <ProfileField label="Groupe sanguin" value={userData.G_sanguin} />
