@@ -320,6 +320,7 @@ const TraitementsScreen = () => {
                         <TextInput
                             style={styles.input}
                             placeholder="Dosage (ex: 500mg, 1 comprimé...)"
+                            placeholderTextColor={'grey'}
                             value={currentTraitement.dosage}
                             onChangeText={(text) => setCurrentTraitement({ ...currentTraitement, dosage: text })}
                         />
@@ -454,7 +455,7 @@ const styles = StyleSheet.create({
         borderColor: "#ccc",
         borderRadius: 5,
         padding: 10,
-        marginBottom: 15,
+        marginBottom: 15
     },
     dateInput: {
         borderWidth: 1,
