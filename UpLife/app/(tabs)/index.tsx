@@ -149,10 +149,10 @@ export default function HomePage() {
                         status={checkedItems[t.id] ? 'checked' : 'unchecked'}
                         onPress={() => handleCheckboxChange(t.id.toString())}
                       />
-                      <Text> {t.nom} / {moment(t.heure, "HH:mm").format("HH[h]mm")}</Text>
+                      <Text style={{ color: '#ddd' }}> {t.nom} / {moment(t.heure, "HH:mm").format("HH[h]mm")}</Text>
                     </View>
                   ))
-                ) : <Text>Aucun</Text>}
+                ) : <Text style={{ color: '#ddd' }}>Aucun</Text>}
               </View>
             ))}
           </View>
@@ -182,11 +182,11 @@ const styles = StyleSheet.create({
   headerText: { fontSize: 22, fontWeight: 'bold', color: 'white', marginLeft: 10 },
   content: { padding: 15 },
   bold: { fontWeight: "bold", marginTop: 10, color: 'white' },
-  checkboxContainer: { flexDirection: "row", alignItems: "center", marginBottom: 5 },
+  checkboxContainer: { flexDirection: "row", alignItems: "center", marginBottom: 5},
   treatmentTitle: { fontWeight: 'bold', marginBottom: 10, color: 'white' },
   mapContainer: { borderRadius: 10, overflow: 'hidden', height: 350, backgroundColor: '#ddd', marginBottom: 20},
   card: {
-    backgroundColor: '#f8c6cd',
+    backgroundColor: '#233468', //#93b8d3 #233468  //f0f0f0
     borderRadius: 8,
     padding: 10,
     marginBottom: 10,

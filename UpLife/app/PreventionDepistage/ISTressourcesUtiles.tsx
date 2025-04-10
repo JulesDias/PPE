@@ -25,7 +25,7 @@ const ISTressourcesUtiles = () => {
         </Text>
 
         <View style={{ height: 20 }} />
-        <Text style={styles.bold}>Ministère du Trvail:</Text>
+        <Text style={styles.bold}>Ministère du Travail:</Text>
         <TouchableOpacity onPress={() => Linking.openURL('https://sante.gouv.fr/soins-et-maladies/maladies/infections-sexuellement-transmissibles/article/infections-sexuellement-transmissibles-ist')}>
           <Text style={styles.link}>Ministère du Travail, de la Santé, des Solidarités et des Familles - Infections sexuellement transmissibles (IST)</Text>
         </TouchableOpacity>
