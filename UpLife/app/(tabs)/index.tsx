@@ -119,7 +119,7 @@ export default function HomePage() {
       <ScrollView style={styles.content}>
         {/* MES RENDEZ-VOUS */}
         <TouchableOpacity onPress={() => router.push('/RendezVous')} activeOpacity={0.7}>
-          <Section title="🗓️ MES RENDEZ-VOUS">
+          <Section title="MES RENDEZ-VOUS">
             <View style={styles.card}>
               {nextAppointments.length > 0 ? (
                 nextAppointments.map((rdv, index) => (
@@ -136,7 +136,7 @@ export default function HomePage() {
         </TouchableOpacity>
 
         {/* MES TRAITEMENTS */}
-        <Section title="💊 MES TRAITEMENTS">
+        <Section title="MES TRAITEMENTS">
           <View style={styles.card}>
             <Text style={styles.treatmentTitle}>Rappel - Aujourd’hui, {moment().format('DD MMMM')}</Text>
             {Object.entries(traitementsDuJour).map(([periode, items]) => (
@@ -160,7 +160,7 @@ export default function HomePage() {
 
         {/* URGENCES & PHARMACIES */}
         {Platform.OS !== 'web' && (
-          <Section title="📍 URGENCES & PHARMACIES">
+          <Section title="URGENCES & PHARMACIES">
             <View style={styles.mapContainer}>
               <WebView
                 source={{ uri: 'https://monpharmacien-idf.fr/widget/500' }}

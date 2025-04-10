@@ -151,6 +151,8 @@ const GestionRDV = () => {
 
         try {
             if (editMode && selectedRDV) {
+                // Pour la modification, nous devons supprimer l'ancien RDV et en créer un nouveau
+                // car la clé primaire est composite et pourrait être modifiée
                 await supabase
                     .from("rdvs")
                     .delete()
@@ -223,7 +225,7 @@ const GestionRDV = () => {
 
     const getMedecinName = (id: string) => {
         const medecin = medecins.find(m => m.ID_medecin === id);
-        return medecin ? medecin.Nom : 'Inconnu';
+        return medecin ? medecin.Nom : 'Inconnu'; 
     };
 
     const getMedecinSpecialite = (id: string) => {
@@ -469,10 +471,11 @@ const styles = StyleSheet.create({
         zIndex: 10,
     },
     title: {
-        fontSize: 20,
+        fontSize: 22,
         fontWeight: 'bold',
         textAlign: 'center',
-        color: 'black',
+        color: '#233468',
+        fontFamily: 'Sora-Medium',
         marginTop: 40,
         marginBottom: 10,
     },

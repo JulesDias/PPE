@@ -411,9 +411,11 @@ const styles = StyleSheet.create({
         zIndex: 10,
     },
     header: {
-        fontSize: 18,
+        fontSize: 22,
         fontWeight: "bold",
         textAlign: 'center',
+        color: '#233468',
+        fontFamily: 'Sora-Medium',
         marginTop: 40,
         marginBottom: 20,
     },

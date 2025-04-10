@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   section: {
-    backgroundColor: '#b6d379',
+    backgroundColor: '#93b8d3',
     padding: 15,
     borderRadius: 10,
     marginBottom: 15

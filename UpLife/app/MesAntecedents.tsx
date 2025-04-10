@@ -387,7 +387,7 @@ const MesAntecedents: React.FC = () => {
 
       {loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={COLORS.secondaryGreen} />
+          <ActivityIndicator size="large" color={COLORS.secondaryBlue} />
           <Text style={styles.loadingText}>Chargement des antécédents...</Text>
         </View>
       ) : (
@@ -579,18 +579,21 @@ const MesAntecedents: React.FC = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="Traitement"
+                  placeholderTextColor={'grey'}
                   value={(newItem as AntecedentPersonnel).traitement || ''}
                   onChangeText={(text) => setNewItem({ ...newItem, traitement: text })}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="Médecin"
+                  placeholderTextColor={'grey'}
                   value={(newItem as AntecedentPersonnel).medecin || ''}
                   onChangeText={(text) => setNewItem({ ...newItem, medecin: text })}
                 />
                 <TextInput
                   style={styles.input}
                   placeholder="Notes"
+                  placeholderTextColor={'grey'}
                   value={(newItem as AntecedentPersonnel).notes || ''}
                   onChangeText={(text) => setNewItem({ ...newItem, notes: text })}
                 />
@@ -651,7 +654,7 @@ export default MesAntecedents;
 
 const COLORS = {
   primaryBlue: '#233468',
-  secondaryGreen: '#b6d379',
+  secondaryBlue: '#93b8d3',
   background: '#FEFEFE',
   lightGrey: '#f0f0f0',
   textDark: '#333',
@@ -676,10 +679,10 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   pageTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: 'black',
+    color: '#233468',
     fontFamily: 'Sora-Medium',
     marginTop: 15,
   },
@@ -694,7 +697,7 @@ const styles = StyleSheet.create({
     color: COLORS.textDark,
   },
   sectionHeader: {
-    backgroundColor: COLORS.secondaryGreen,
+    backgroundColor: COLORS.secondaryBlue,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -719,7 +722,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   antecedentCard: {
-    backgroundColor: '#fff',
+    backgroundColor: '#ccc',
     borderRadius: 6,
     padding: 10,
     marginVertical: 5,
@@ -746,7 +749,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   addButton: {
-    backgroundColor: COLORS.secondaryGreen,
+    backgroundColor: COLORS.secondaryBlue,
     padding: 10,
     borderRadius: 6,
     marginTop: 10,
@@ -757,7 +760,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   editButton: {
-    backgroundColor: COLORS.secondaryGreen,
+    backgroundColor: COLORS.secondaryBlue,
     padding: 6,
     borderRadius: 4,
     marginTop: 8,
