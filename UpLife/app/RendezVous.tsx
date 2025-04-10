@@ -29,7 +29,7 @@ const GestionRDV = () => {
 
     const getMedecinName = (id: number) => {
         const medecin = medecins.find(m => m.ID_medecin === id);
-        return medecin ? medecin.Nom : 'Inconnu';
+        return medecin ? medecin.Nom : 'Inconnu'; 
     };
 
     return (

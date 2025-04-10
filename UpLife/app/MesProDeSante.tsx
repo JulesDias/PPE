@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, SectionList, StyleSheet, Modal, FlatList 
 import { Entypo, FontAwesome, FontAwesome as Icon } from '@expo/vector-icons';
 import Sidebar from '@/components/Sidebar';
 import { router } from 'expo-router';
-import { ScrollView } from 'react-native-gesture-handler';
 import { supabase } from '@/services/supabase';
 
 
@@ -125,7 +124,7 @@ export default function MedecinsPage() {
                 )}
                 renderItem={({ item }) => (
                     <TouchableOpacity style={styles.medecinItem} onPress={() => showMedecinDetails(item)}>
-                        <Text style={styles.medecinNom}>Dr. {item.Nom}</Text>
+                        <Text style={styles.medecinNom}>Dr. {item.Prenom} {item.Nom}</Text>
                         <Text style={styles.specialite}>{item.Specialite}</Text>
                     </TouchableOpacity>
                 )}
