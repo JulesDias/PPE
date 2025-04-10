@@ -214,15 +214,19 @@ const TraitementsScreen = () => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.navbar}>
-                <TouchableOpacity onPress={() => setMenuVisible(true)}>
-                    <Ionicons name="menu" size={28} color="black" />
+            {/* Bouton Menu (Gauche), affiché seulement si le menu est fermé */}
+            {!menuVisible && (
+                <TouchableOpacity onPress={() => setMenuVisible(true)} style={styles.menuButton}>
+                    <Ionicons name="menu" size={30} color="black" />
                 </TouchableOpacity>
-                <Text style={styles.header}>MES TRAITEMENTS</Text>
-                <TouchableOpacity onPress={() => router.push("/")}>
-                    <Ionicons name="home" size={28} color="black" />
-                </TouchableOpacity>
-            </View>
+            )}
+
+            {/* Bouton Maison (Droite) */}
+            <TouchableOpacity onPress={() => router.push("/")} style={styles.homeButton}>
+                <Ionicons name="home" size={30} color="black" />
+            </TouchableOpacity>
+
+            <Text style={styles.header}>MES TRAITEMENTS</Text>
 
             <Sidebar menuVisible={menuVisible} closeMenu={() => setMenuVisible(false)} />
 
@@ -394,8 +398,25 @@ const TraitementsScreen = () => {
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: "#F5F5F5", paddingHorizontal: 16, paddingTop: 40 },
-    navbar: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 20 },
-    header: { fontSize: 18, fontWeight: "bold" },
+    menuButton: {
+        position: 'absolute',
+        top: 15,
+        left: 15,
+        zIndex: 10,
+    },
+    homeButton: {
+        position: 'absolute',
+        top: 15,
+        right: 15,
+        zIndex: 10,
+    },
+    header: {
+        fontSize: 18,
+        fontWeight: "bold",
+        textAlign: 'center',
+        marginTop: 40,
+        marginBottom: 20,
+    },
     section: { marginBottom: 20 },
     sectionTitle: { fontWeight: "bold", marginBottom: 10 },
     card: { backgroundColor: "#93b8d3", padding: 15, borderRadius: 10, elevation: 3 },
