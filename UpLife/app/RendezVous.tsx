@@ -17,12 +17,14 @@ interface RDV {
     Horaire: string;
     Intitule: string;
     medecin_nom?: string;
+    medecin_prenom?: string;
     medecin_specialite?: string;
 }
 
 interface Medecin {
     ID_medecin: string;
     Nom: string;
+    Prenom?: string;
     Specialite: string;
 }
 
@@ -50,7 +52,7 @@ const GestionRDV = () => {
 
         const { data, error } = await supabase
             .from("rdvs")
-            .select(`*, medecins(Nom, Specialite)`)
+            .select(`*, medecins(Nom, Prenom, Specialite)`)
             .eq("ID_utilisateur", user.id);
 
         if (error) {
@@ -62,16 +64,16 @@ const GestionRDV = () => {
             const formattedData = data.map(rdv => ({
                 ...rdv,
                 medecin_nom: rdv.medecins?.Nom,
+                medecin_prenom: rdv.medecins?.Prenom,
                 medecin_specialite: rdv.medecins?.Specialite
             }));
             setRdvData(formattedData);
 
-            // Générer les rappels pour les RDVs à venir
             const upcomingRdvs = formattedData
                 .filter(rdv => new Date(rdv.Date_rdv) > new Date())
                 .map((rdv, index) => ({
                     id: index,
-                    text: `${moment(rdv.Date_rdv).format('MMMM YYYY')} - ${rdv.medecin_specialite} - Dr. ${rdv.medecin_nom}`,
+                    text: `${moment(rdv.Date_rdv).format('MMMM YYYY')} - ${rdv.medecin_specialite} - ${getMedecinName(rdv.ID_medecin)}`,
                     checked: false
                 }));
             setRappels(upcomingRdvs);
@@ -91,6 +93,16 @@ const GestionRDV = () => {
         if (data) {
             setMedecins(data);
         }
+    };
+
+    const getMedecinName = (id: string) => {
+        const medecin = medecins.find(m => m.ID_medecin === id);
+        return medecin ? `Dr ${medecin.Prenom || ''} ${medecin.Nom}`.trim() : 'Inconnu';
+    };
+
+    const getMedecinSpecialite = (id: string) => {
+        const medecin = medecins.find(m => m.ID_medecin === id);
+        return medecin ? medecin.Specialite : 'Inconnue';
     };
 
     const toggleView = () => {
@@ -151,8 +163,6 @@ const GestionRDV = () => {
 
         try {
             if (editMode && selectedRDV) {
-                // Pour la modification, nous devons supprimer l'ancien RDV et en créer un nouveau
-                // car la clé primaire est composite et pourrait être modifiée
                 await supabase
                     .from("rdvs")
                     .delete()
@@ -223,33 +233,20 @@ const GestionRDV = () => {
         }
     };
 
-    const getMedecinName = (id: string) => {
-        const medecin = medecins.find(m => m.ID_medecin === id);
-        return medecin ? medecin.Nom : 'Inconnu'; 
-    };
-
-    const getMedecinSpecialite = (id: string) => {
-        const medecin = medecins.find(m => m.ID_medecin === id);
-        return medecin ? medecin.Specialite : 'Inconnue';
-    };
-
     return (
         <View style={styles.container}>
-            {/* Bouton Menu (Gauche), affiché seulement si le menu est fermé */}
             {!menuVisible && (
                 <TouchableOpacity onPress={() => setMenuVisible(true)} style={styles.menuButton}>
                     <Icon name="bars" size={30} color="black" />
                 </TouchableOpacity>
             )}
 
-            {/* Bouton Maison (Droite) */}
             <TouchableOpacity onPress={() => router.push('/(tabs)')} style={styles.homeButton}>
                 <Icon name="home" size={30} color="black" />
             </TouchableOpacity>
 
             <Text style={styles.title}>MES RENDEZ-VOUS</Text>
 
-            {/* RAPPELS */}
             <View style={styles.rappelsContainer}>
                 <Text style={styles.rappelsTitle}>RAPPELS DES RENDEZ-VOUS À PRENDRE</Text>
                 {rappels.map((rappel) => (
@@ -268,7 +265,6 @@ const GestionRDV = () => {
                 ))}
             </View>
 
-            {/* TOGGLE SWITCH AVEC ICÔNES */}
             <View style={styles.toggleContainer}>
                 <Icon name="list" size={24} color={isCalendarView ? "#999" : "#233468"} style={styles.toggleIcon} />
                 <Switch
@@ -280,7 +276,6 @@ const GestionRDV = () => {
                 <Icon name="calendar" size={24} color={isCalendarView ? "#233468" : "#999"} style={styles.toggleIcon} />
             </View>
 
-            {/* LISTE OU CALENDRIER */}
             <View style={styles.rdvContainer}>
                 {isCalendarView ? (
                     <Calendar
@@ -314,7 +309,7 @@ const GestionRDV = () => {
                             <TouchableOpacity onPress={() => setSelectedRDV(item)}>
                                 <View style={styles.rdvItem}>
                                     <Text style={styles.rdvText}>{moment(item.Date_rdv).format('DD/MM/YYYY')} - {item.Horaire}</Text>
-                                    <Text style={styles.rdvText}>{item.Intitule} - Dr. {getMedecinName(item.ID_medecin)} ({getMedecinSpecialite(item.ID_medecin)})</Text>
+                                    <Text style={styles.rdvText}>{item.Intitule} - {getMedecinName(item.ID_medecin)} ({getMedecinSpecialite(item.ID_medecin)})</Text>
                                 </View>
                             </TouchableOpacity>
                         )}
@@ -322,13 +317,11 @@ const GestionRDV = () => {
                 )}
             </View>
 
-            {/* Bouton Ajouter RDV */}
             <TouchableOpacity style={styles.addButton} onPress={handleAddRDV}>
                 <Icon name="plus" size={20} color="white" />
                 <Text style={styles.addButtonText}>Ajouter un RDV</Text>
             </TouchableOpacity>
 
-            {/* MODAL DETAILS RDV */}
             <Modal visible={!!selectedRDV} transparent={true} animationType='slide'>
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContent}>
@@ -338,7 +331,7 @@ const GestionRDV = () => {
                                 <Text style={styles.modalText}>Date : {moment(selectedRDV.Date_rdv).format('DD/MM/YYYY')}</Text>
                                 <Text style={styles.modalText}>Heure : {selectedRDV.Horaire}</Text>
                                 <Text style={styles.modalText}>Objet : {selectedRDV.Intitule}</Text>
-                                <Text style={styles.modalText}>Médecin : Dr. {getMedecinName(selectedRDV.ID_medecin)} ({getMedecinSpecialite(selectedRDV.ID_medecin)})</Text>
+                                <Text style={styles.modalText}>Médecin : {getMedecinName(selectedRDV.ID_medecin)} ({getMedecinSpecialite(selectedRDV.ID_medecin)})</Text>
 
                                 <View style={styles.modalButtons}>
                                     <TouchableOpacity style={styles.editButton} onPress={() => {
@@ -362,7 +355,6 @@ const GestionRDV = () => {
                 </View>
             </Modal>
 
-            {/* MODAL AJOUT/MODIFICATION RDV */}
             <Modal visible={modalVisible} transparent={true} animationType='slide'>
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalFormContent}>
@@ -381,7 +373,7 @@ const GestionRDV = () => {
                                             ]}
                                             onPress={() => setCurrentRDV({ ...currentRDV, ID_medecin: medecin.ID_medecin })}
                                         >
-                                            <Text style={styles.medecinText}>Dr. {medecin.Nom} ({medecin.Specialite})</Text>
+                                            <Text style={styles.medecinText}>{getMedecinName(medecin.ID_medecin)} ({medecin.Specialite})</Text>
                                         </TouchableOpacity>
                                     ))}
                                 </View>
@@ -471,11 +463,10 @@ const styles = StyleSheet.create({
         zIndex: 10,
     },
     title: {
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
-        color: '#233468',
-        fontFamily: 'Sora-Medium',
+        color: 'black',
         marginTop: 40,
         marginBottom: 10,
     },
