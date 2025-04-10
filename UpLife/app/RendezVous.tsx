@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Modal, TextInput, Alert, StyleSheet, Switch } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Modal, TextInput, Alert, StyleSheet, Switch, ScrollView } from 'react-native';
 import { Checkbox } from 'react-native-paper';
 import { Calendar } from 'react-native-calendars';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -40,10 +40,15 @@ const GestionRDV = () => {
     const [currentRDV, setCurrentRDV] = useState<Partial<RDV>>({});
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
+    const [medecinsLoaded, setMedecinsLoaded] = useState(false); // État pour suivre le chargement des médecins
 
     useEffect(() => {
-        fetchRDVs();
-        fetchMedecins();
+        const fetchData = async () => {
+            await fetchMedecins();
+            fetchRDVs();
+        };
+
+        fetchData();
     }, []);
 
     const fetchRDVs = async () => {
@@ -92,6 +97,7 @@ const GestionRDV = () => {
 
         if (data) {
             setMedecins(data);
+            setMedecinsLoaded(true); // Marquer les médecins comme chargés
         }
     };
 
@@ -247,75 +253,81 @@ const GestionRDV = () => {
 
             <Text style={styles.title}>MES RENDEZ-VOUS</Text>
 
-            <View style={styles.rappelsContainer}>
-                <Text style={styles.rappelsTitle}>RAPPELS DES RENDEZ-VOUS À PRENDRE</Text>
-                {rappels.map((rappel) => (
-                    <View key={rappel.id} style={styles.rappelItem}>
-                        <Checkbox
-                            status={rappel.checked ? 'checked' : 'unchecked'}
-                            onPress={() => {
-                                setRappels(rappels.map(item =>
-                                    item.id === rappel.id ? { ...item, checked: !item.checked } : item
-                                ));
-                            }}
-                            color="white"
-                        />
-                        <Text style={styles.rappelText}>{rappel.text}</Text>
+            {medecinsLoaded ? ( // Conditionner l'affichage des rappels et des RDVs
+                <>
+                    <View style={styles.rappelsContainer}>
+                        <Text style={styles.rappelsTitle}>RAPPELS DES RENDEZ-VOUS À PRENDRE</Text>
+                        {rappels.map((rappel) => (
+                            <View key={rappel.id} style={styles.rappelItem}>
+                                <Checkbox
+                                    status={rappel.checked ? 'checked' : 'unchecked'}
+                                    onPress={() => {
+                                        setRappels(rappels.map(item =>
+                                            item.id === rappel.id ? { ...item, checked: !item.checked } : item
+                                        ));
+                                    }}
+                                    color="white"
+                                />
+                                <Text style={styles.rappelText}>{rappel.text}</Text>
+                            </View>
+                        ))}
                     </View>
-                ))}
-            </View>
 
-            <View style={styles.toggleContainer}>
-                <Icon name="list" size={24} color={isCalendarView ? "#999" : "#233468"} style={styles.toggleIcon} />
-                <Switch
-                    value={isCalendarView}
-                    onValueChange={toggleView}
-                    trackColor={{ false: "#767577", true: "#81b0ff" }}
-                    thumbColor={isCalendarView ? "#233468" : "#f4f3f4"}
-                />
-                <Icon name="calendar" size={24} color={isCalendarView ? "#233468" : "#999"} style={styles.toggleIcon} />
-            </View>
+                    <View style={styles.toggleContainer}>
+                        <Icon name="list" size={24} color={isCalendarView ? "#999" : "#233468"} style={styles.toggleIcon} />
+                        <Switch
+                            value={isCalendarView}
+                            onValueChange={toggleView}
+                            trackColor={{ false: "#767577", true: "#81b0ff" }}
+                            thumbColor={isCalendarView ? "#233468" : "#f4f3f4"}
+                        />
+                        <Icon name="calendar" size={24} color={isCalendarView ? "#233468" : "#999"} style={styles.toggleIcon} />
+                    </View>
 
-            <View style={styles.rdvContainer}>
-                {isCalendarView ? (
-                    <Calendar
-                        markedDates={rdvData.reduce((acc: { [key: string]: { selected: boolean; marked: boolean; selectedColor: string } }, rdv) => {
-                            acc[rdv.Date_rdv] = { selected: true, marked: true, selectedColor: 'white' };
-                            return acc;
-                        }, {})}
-                        onDayPress={(day: { dateString: string }) => {
-                            const rdv = rdvData.find(r => r.Date_rdv === day.dateString);
-                            if (rdv) setSelectedRDV(rdv);
-                        }}
-                        theme={{
-                            backgroundColor: '#233468',
-                            calendarBackground: '#233468',
-                            textSectionTitleColor: '#fff',
-                            selectedDayBackgroundColor: '#fff',
-                            selectedDayTextColor: '#233468',
-                            todayTextColor: '#fff',
-                            dayTextColor: '#fff',
-                            textDisabledColor: '#666',
-                            arrowColor: '#fff',
-                            monthTextColor: '#fff',
-                            indicatorColor: '#fff',
-                        }}
-                    />
-                ) : (
-                    <FlatList
-                        data={rdvData}
-                        keyExtractor={(item) => `${item.ID_medecin}-${item.Date_rdv}-${item.Horaire}`}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity onPress={() => setSelectedRDV(item)}>
-                                <View style={styles.rdvItem}>
-                                    <Text style={styles.rdvText}>{moment(item.Date_rdv).format('DD/MM/YYYY')} - {item.Horaire}</Text>
-                                    <Text style={styles.rdvText}>{item.Intitule} - {getMedecinName(item.ID_medecin)} ({getMedecinSpecialite(item.ID_medecin)})</Text>
-                                </View>
-                            </TouchableOpacity>
+                    <View style={styles.rdvContainer}>
+                        {isCalendarView ? (
+                            <Calendar
+                                markedDates={rdvData.reduce((acc: { [key: string]: { selected: boolean; marked: boolean; selectedColor: string } }, rdv) => {
+                                    acc[rdv.Date_rdv] = { selected: true, marked: true, selectedColor: 'white' };
+                                    return acc;
+                                }, {})}
+                                onDayPress={(day: { dateString: string }) => {
+                                    const rdv = rdvData.find(r => r.Date_rdv === day.dateString);
+                                    if (rdv) setSelectedRDV(rdv);
+                                }}
+                                theme={{
+                                    backgroundColor: '#233468',
+                                    calendarBackground: '#233468',
+                                    textSectionTitleColor: '#fff',
+                                    selectedDayBackgroundColor: '#fff',
+                                    selectedDayTextColor: '#233468',
+                                    todayTextColor: '#fff',
+                                    dayTextColor: '#fff',
+                                    textDisabledColor: '#666',
+                                    arrowColor: '#fff',
+                                    monthTextColor: '#fff',
+                                    indicatorColor: '#fff',
+                                }}
+                            />
+                        ) : (
+                            <FlatList
+                                data={rdvData}
+                                keyExtractor={(item) => `${item.ID_medecin}-${item.Date_rdv}-${item.Horaire}`}
+                                renderItem={({ item }) => (
+                                    <TouchableOpacity onPress={() => setSelectedRDV(item)}>
+                                        <View style={styles.rdvItem}>
+                                            <Text style={styles.rdvText}>{moment(item.Date_rdv).format('DD/MM/YYYY')} - {item.Horaire}</Text>
+                                            <Text style={styles.rdvText}>{item.Intitule} - {getMedecinName(item.ID_medecin)} ({getMedecinSpecialite(item.ID_medecin)})</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                )}
+                            />
                         )}
-                    />
-                )}
-            </View>
+                    </View>
+                </>
+            ) : (
+                <Text>Chargement des médecins...</Text>
+            )}
 
             <TouchableOpacity style={styles.addButton} onPress={handleAddRDV}>
                 <Icon name="plus" size={20} color="white" />
@@ -363,7 +375,7 @@ const GestionRDV = () => {
                         <Text style={styles.label}>Médecin*</Text>
                         <View style={styles.pickerContainer}>
                             {medecins.length > 0 ? (
-                                <View style={styles.picker}>
+                                <ScrollView style={styles.pickerScroll} nestedScrollEnabled={true}>
                                     {medecins.map(medecin => (
                                         <TouchableOpacity
                                             key={medecin.ID_medecin}
@@ -376,7 +388,7 @@ const GestionRDV = () => {
                                             <Text style={styles.medecinText}>{getMedecinName(medecin.ID_medecin)} ({medecin.Specialite})</Text>
                                         </TouchableOpacity>
                                     ))}
-                                </View>
+                                </ScrollView>
                             ) : (
                                 <Text>Chargement des médecins...</Text>
                             )}
@@ -630,6 +642,10 @@ const styles = StyleSheet.create({
     },
     pickerContainer: {
         marginBottom: 10,
+        maxHeight: 200,
+    },
+    pickerScroll: {
+        maxHeight: 150,
     },
     picker: {
         maxHeight: 150,
