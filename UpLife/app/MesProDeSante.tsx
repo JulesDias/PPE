@@ -2,59 +2,99 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, SectionList, StyleSheet, Modal, FlatList } from 'react-native';
 import { Entypo, FontAwesome, FontAwesome as Icon } from '@expo/vector-icons';
 import Sidebar from '@/components/Sidebar';
-import medecinsData from '@/data/medecins.json';
-import rdvsData from '@/data/rdvs.json';  // Importation des données des rendez-vous
 import { router } from 'expo-router';
 import { ScrollView } from 'react-native-gesture-handler';
+import { supabase } from '@/services/supabase';
+
+
 
 export default function MedecinsPage() {
     const [menuVisible, setMenuVisible] = useState(false);
     const [medecins, setMedecins] = useState<{ title: string; data: any[] }[]>([]);
     const [selectedMedecin, setSelectedMedecin] = useState<any>(null);
-    const [historiqueRDVs, setHistoriqueRDVs] = useState<any[]>([]);  // État pour l'historique des RDVs
+    const [historiqueRDVs, setHistoriqueRDVs] = useState<any[]>([]); 
 
-    useEffect(() => {
-        // Regrouper les médecins par initiale
-        const grouped = medecinsData.reduce((acc, medecin) => {
-            const initiale = medecin.Nom.charAt(0).toUpperCase();
-            if (!acc[initiale]) {
-                acc[initiale] = [];
-            }
-            acc[initiale].push(medecin);
-            return acc;
-        }, {} as Record<string, any[]>);
-
-        // Transformer en tableau trié
-        const sections = Object.keys(grouped)
-            .sort()
-            .map(initiale => ({
-                title: initiale,
-                data: grouped[initiale].sort((a, b) => a.Nom.localeCompare(b.Nom)),
-            }));
-
-        setMedecins(sections);
-    }, []);
-
-    // Fonction pour afficher les informations du médecin
-    const showMedecinDetails = (medecin: any) => {
+    const showMedecinDetails = async (medecin: any) => {
         setSelectedMedecin(medecin);
-
-        // Filtrer les rendez-vous en fonction de l'ID du médecin sélectionné
-        const rdvsMedecin = rdvsData.filter((rdv) => rdv.ID_medecin === medecin.ID_medecin);
-        setHistoriqueRDVs(rdvsMedecin);
+        const { data: rdvsData, error } = await supabase
+            .from('rdvs')
+            .select('*')
+            .eq('ID_medecin', medecin.ID_medecin);
+    
+        if (!error && rdvsData) {
+            setHistoriqueRDVs(rdvsData);
+        }
     };
-
-    // Fonction pour fermer le modal
+    
     const closeModal = () => {
         setSelectedMedecin(null);
+        setHistoriqueRDVs([]);
     };
+    
+    const isRdvPassed = (dateStr: string) => {
+        return new Date(dateStr) < new Date();
+    };
+    
 
-    // Vérifier si un rendez-vous est passé
-    const isRdvPassed = (dateRdv: string) => {
-        const today = new Date();
-        const rdvDate = new Date(dateRdv);
-        return rdvDate < today;
-    };
+    useEffect(() => {
+        const fetchMedecins = async () => {
+            const { data: { user }, error } = await supabase.auth.getUser();
+    
+            if (error || !user) {
+                console.error("Erreur lors de la récupération de l'utilisateur :", error?.message);
+                return;
+            }
+    
+            try {
+                // Récupération des ID_medecin associés à l'utilisateur
+                const { data: rdvData, error: rdvError } = await supabase
+                    .from('rdvs')
+                    .select('ID_medecin')
+                    .eq('ID_utilisateur', user.id);
+    
+                if (rdvError) throw rdvError;
+    
+                const medecinIds = [...new Set(rdvData.map(r => r.ID_medecin))];
+    
+                if (medecinIds.length === 0) {
+                    setMedecins([]);
+                    return;
+                }
+    
+                // Récupération des infos des médecins
+                const { data: medecinsData, error: medecinsError } = await supabase
+                    .from('medecins')
+                    .select('*')
+                    .in('ID_medecin', medecinIds);
+    
+                if (medecinsError) throw medecinsError;
+    
+                // Tri des médecins par nom
+                const sortedMedecins = medecinsData.sort((a, b) =>
+                    a.Nom.localeCompare(b.Nom, 'fr', { sensitivity: 'base' })
+                );
+    
+                // Organisation des médecins par spécialité
+                const grouped = sortedMedecins.reduce((acc: any, medecin) => {
+                    const specialite = medecin.Specialite || 'Autre';
+                    const existingGroup = acc.find((group: any) => group.title === specialite);
+                    if (existingGroup) {
+                        existingGroup.data.push(medecin);
+                    } else {
+                        acc.push({ title: specialite, data: [medecin] });
+                    }
+                    return acc;
+                }, []);
+    
+                setMedecins(grouped);
+            } catch (err: any) {
+                console.error("Erreur lors de la récupération des médecins :", err.message);
+            }
+        };
+    
+        fetchMedecins();
+    }, []);
+    
 
     return (
         <View style={styles.container}>
