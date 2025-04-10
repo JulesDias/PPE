@@ -21,7 +21,6 @@ export default function LoginScreen() {
     const handleLogin = async () => {
         try {
             const user = await signIn(credentials.email, credentials.motDePasse);
-            Alert.alert('Connexion réussie', `Bienvenue ${user.user?.email}`);
             router.push('/'); // Redirection après connexion réussie
         } catch (error) {
             if (error instanceof Error) {

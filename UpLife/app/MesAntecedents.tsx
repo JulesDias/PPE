@@ -6,25 +6,17 @@ import {
   Modal,
   ScrollView,
   TextInput,
-  StyleSheet
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
-
-// For reading/writing our local JSON copy
-import * as FileSystem from 'expo-file-system';
-
-// For icons
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-// Import your sidebar
 import Sidebar from '@/components/Sidebar';
 import { router } from 'expo-router';
-
-// Import the data from your original /data/antecedent.json
-// (Will copy it into the DocumentDirectory if needed.)
-import antecedentData from '@/data/antecedent.json';
+import { supabase } from '@/services/supabase';
 
 interface AntecedentPersonnel {
-  id: number;
+  id: string;
   titre: string;
   date: string;
   traitement: string;
@@ -33,7 +25,7 @@ interface AntecedentPersonnel {
 }
 
 interface AntecedentFamilial {
-  id: number;
+  id: string;
   titre: string;
   membre: string;
   age_apparition: string;
@@ -41,75 +33,201 @@ interface AntecedentFamilial {
 }
 
 const MesAntecedents: React.FC = () => {
-  // We keep arrays for each category
   const [personnels, setPersonnels] = useState<AntecedentPersonnel[]>([]);
   const [familiaux, setFamiliaux] = useState<AntecedentFamilial[]>([]);
-
-  // Collapsed by default
-  const [isPersonnelsOpen, setIsPersonnelsOpen] = useState<boolean>(false);
-  const [isFamiliauxOpen, setIsFamiliauxOpen] = useState<boolean>(false);
-
-  // States to handle modals for editing/adding
+  const [isPersonnelsOpen, setIsPersonnelsOpen] = useState<boolean>(true);
+  const [isFamiliauxOpen, setIsFamiliauxOpen] = useState<boolean>(true);
   const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
+  const [addModalVisible, setAddModalVisible] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [menuVisible, setMenuVisible] = useState(false);
+
   const [editItem, setEditItem] = useState<
-    Partial<AntecedentPersonnel | AntecedentFamilial> & { category?: 'personnels' | 'familiaux' }
+    Partial<AntecedentPersonnel | AntecedentFamilial> & { category?: 'personnels' | 'familiaux'; id?: string }
   >({});
 
-  const [addModalVisible, setAddModalVisible] = useState<boolean>(false);
   const [newItem, setNewItem] = useState<
     Partial<AntecedentPersonnel | AntecedentFamilial> & { category?: 'personnels' | 'familiaux' }
   >({});
 
-  // Sidebar menu visibility
-  const [menuVisible, setMenuVisible] = useState(false);
-
-  // Where we’ll store the local path of antecedent.json
-  const fileUri = FileSystem.documentDirectory + 'antecedent.json';
-
   useEffect(() => {
-    // On mount, check if we have a local copy in documentDirectory.
-    // If not, create one using the original imported data.
-    initAntecedentData();
+    fetchAntecedents();
   }, []);
 
-  const initAntecedentData = async () => {
+  const getCurrentUserId = async () => {
     try {
-      const fileInfo = await FileSystem.getInfoAsync(fileUri);
-      if (!fileInfo.exists) {
-        // Write the initial data to local documentDirectory
-        await FileSystem.writeAsStringAsync(
-          fileUri,
-          JSON.stringify(antecedentData, null, 2)
-        );
+      const { data: { user }, error } = await supabase.auth.getUser();
+
+      if (error) {
+        console.error("Erreur de récupération de l'utilisateur:", error.message);
+        throw error;
       }
-      // Now read from the local file
-      const json = await FileSystem.readAsStringAsync(fileUri);
-      const parsed = JSON.parse(json);
-      setPersonnels(parsed.personnels || []);
-      setFamiliaux(parsed.familiaux || []);
+
+      if (!user) {
+        console.error("Aucun utilisateur connecté");
+        throw new Error("Aucun utilisateur connecté");
+      }
+
+      return user.id;
     } catch (error) {
-      console.log('Error initializing antecedent data:', error);
+      console.error("Erreur dans getCurrentUserId:", error instanceof Error ? error.message : error);
+      Alert.alert('Erreur', 'Impossible de récupérer votre identifiant.');
+      throw error;
     }
   };
 
-  // Save changes to local JSON
-  const saveToJSONFile = async (
-    updatedPersonnels: AntecedentPersonnel[],
-    updatedFamiliaux: AntecedentFamilial[]
-  ) => {
+  const fetchAntecedents = async () => {
+    setLoading(true);
     try {
-      const updatedData = { personnels: updatedPersonnels, familiaux: updatedFamiliaux };
-      await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(updatedData, null, 2));
+      const userId = await getCurrentUserId();
+
+      let { data: personnelsData, error: personnelsError } = await supabase
+        .from('antecedents')
+        .select('*')
+        .eq('ID_utilisateur', userId);
+
+      if (personnelsError) {
+        console.error('Error fetching personal antecedents:', personnelsError);
+        throw personnelsError;
+      }
+
+      let formattedPersonnels: AntecedentPersonnel[] = [];
+      if (personnelsData && personnelsData.length > 0) {
+        formattedPersonnels = personnelsData.map((item) => ({
+          id: item.ID_antecedent,
+          titre: item.Nom || '',
+          date: item.date || '',
+          traitement: item.traitement || '',
+          medecin: item.medecins || '',
+          notes: item.note || ''
+        }));
+      }
+
+      let { data: familiauxData, error: familiauxError } = await supabase
+        .from('antecedents_familiaux')
+        .select('*')
+        .eq('ID_utilisateur', userId);
+
+      if (familiauxError) {
+        console.error('Error fetching family antecedents:', familiauxError);
+        throw familiauxError;
+      }
+
+      let formattedFamiliaux: AntecedentFamilial[] = [];
+      if (familiauxData && familiauxData.length > 0) {
+        formattedFamiliaux = familiauxData.map((item) => ({
+          id: item.ID_antecedentsFam,
+          titre: item.Nom || '',
+          membre: item.membre || '',
+          age_apparition: item.Age_Apparition || '',
+          notes: item.Note || ''
+        }));
+      }
+
+      setPersonnels(formattedPersonnels);
+      setFamiliaux(formattedFamiliaux);
     } catch (error) {
-      console.log('Error saving to JSON file:', error);
+      console.error('Error in fetchAntecedents:', error);
+      Alert.alert('Erreur', 'Impossible de récupérer les antécédents.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Toggle section expand/collapse
+  const isValidYear = (year: string) => {
+    const currentYear = new Date().getFullYear();
+    const yearNumber = parseInt(year, 10);
+    return !isNaN(yearNumber) && yearNumber >= 1900 && yearNumber <= currentYear;
+  };
+
+  const savePersonnelToDatabase = async (antecedent: AntecedentPersonnel) => {
+    try {
+      const userId = await getCurrentUserId();
+
+      if (!isValidYear(antecedent.date)) {
+        Alert.alert('Erreur', 'L\'année doit être comprise entre 1900 et l\'année en cours.');
+        return false;
+      }
+
+      const result = await supabase
+        .from('antecedents')
+        .insert({
+          ID_utilisateur: userId,
+          Nom: antecedent.titre,
+          date: antecedent.date,
+          traitement: antecedent.traitement,
+          medecins: antecedent.medecin,
+          note: antecedent.notes
+        });
+
+      if (result.error) {
+        console.error('Error saving personal antecedent:', result.error);
+        Alert.alert('Erreur', 'Impossible d\'enregistrer l\'antécédent personnel.');
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error('Exception in savePersonnelToDatabase:', error);
+      Alert.alert('Erreur', 'Une erreur s\'est produite lors de l\'enregistrement.');
+      return false;
+    }
+  };
+
+  const saveFamilialToDatabase = async (antecedent: AntecedentFamilial) => {
+    try {
+      const userId = await getCurrentUserId();
+
+      const result = await supabase
+        .from('antecedents_familiaux')
+        .insert({
+          ID_utilisateur: userId,
+          Nom: antecedent.titre,
+          membre: antecedent.membre,
+          Age_Apparition: antecedent.age_apparition,
+          Note: antecedent.notes
+        });
+
+      if (result.error) {
+        console.error('Error saving familial antecedent:', result.error);
+        Alert.alert('Erreur', 'Impossible d\'enregistrer l\'antécédent familial.');
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error('Exception in saveFamilialToDatabase:', error);
+      Alert.alert('Erreur', 'Une erreur s\'est produite lors de l\'enregistrement.');
+      return false;
+    }
+  };
+
+  const deleteAntecedent = async (category: 'personnels' | 'familiaux', id: string) => {
+    try {
+      const userId = await getCurrentUserId();
+      let table = category === 'personnels' ? 'antecedents' : 'antecedents_familiaux';
+      let idColumn = category === 'personnels' ? 'ID_antecedent' : 'ID_antecedentsFam';
+
+      const { error } = await supabase
+        .from(table)
+        .delete()
+        .eq(idColumn, id)
+        .eq('ID_utilisateur', userId);
+
+      if (error) {
+        console.error('Error deleting antecedent:', error);
+        Alert.alert('Erreur', 'Impossible de supprimer l\'antécédent.');
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error('Exception in deleteAntecedent:', error);
+      Alert.alert('Erreur', 'Une erreur s\'est produite lors de la suppression.');
+      return false;
+    }
+  };
+
   const togglePersonnels = () => setIsPersonnelsOpen(!isPersonnelsOpen);
   const toggleFamiliaux = () => setIsFamiliauxOpen(!isFamiliauxOpen);
 
-  // ---- EDIT FUNCTIONS ----
   const onEditPress = (
     item: AntecedentPersonnel | AntecedentFamilial,
     category: 'personnels' | 'familiaux'
@@ -119,182 +237,237 @@ const MesAntecedents: React.FC = () => {
   };
 
   const handleEditSave = async () => {
-    const category = editItem.category;
-    if (!category) return setEditModalVisible(false);
+    try {
+      const category = editItem.category;
+      if (!category || !editItem.id) {
+        setEditModalVisible(false);
+        return;
+      }
 
-    if (category === 'personnels') {
-      const updated = personnels.map((p) =>
-        p.id === editItem.id
-          ? {
-            ...p,
-            titre: editItem.titre || '',
-            date: (editItem as AntecedentPersonnel).date || '',
-            traitement: (editItem as AntecedentPersonnel).traitement || '',
-            medecin: (editItem as AntecedentPersonnel).medecin || '',
-            notes: (editItem as AntecedentPersonnel).notes || '',
-          }
-          : p
-      );
-      setPersonnels(updated);
+      if (category === 'personnels') {
+        const antecedent = {
+          id: editItem.id,
+          titre: editItem.titre || '',
+          date: (editItem as AntecedentPersonnel).date || '',
+          traitement: (editItem as AntecedentPersonnel).traitement || '',
+          medecin: (editItem as AntecedentPersonnel).medecin || '',
+          notes: (editItem as AntecedentPersonnel).notes || ''
+        };
+
+        if (!isValidYear(antecedent.date)) {
+          Alert.alert('Erreur', 'L\'année doit être comprise entre 1900 et l\'année en cours.');
+          return;
+        }
+
+        const result = await supabase
+          .from('antecedents')
+          .update({
+            Nom: antecedent.titre,
+            date: antecedent.date,
+            traitement: antecedent.traitement,
+            medecins: antecedent.medecin,
+            note: antecedent.notes
+          })
+          .eq('ID_antecedent', antecedent.id);
+
+        if (result.error) {
+          console.error('Error updating personal antecedent:', result.error);
+          Alert.alert('Erreur', 'Impossible de mettre à jour l\'antécédent personnel.');
+          return;
+        }
+      } else {
+        const antecedent = {
+          id: editItem.id,
+          titre: editItem.titre || '',
+          membre: (editItem as AntecedentFamilial).membre || '',
+          age_apparition: (editItem as AntecedentFamilial).age_apparition || '',
+          notes: (editItem as AntecedentFamilial).notes || ''
+        };
+
+        const result = await supabase
+          .from('antecedents_familiaux')
+          .update({
+            Nom: antecedent.titre,
+            membre: antecedent.membre,
+            Age_Apparition: antecedent.age_apparition,
+            Note: antecedent.notes
+          })
+          .eq('ID_antecedentsFam', antecedent.id);
+
+        if (result.error) {
+          console.error('Error updating familial antecedent:', result.error);
+          Alert.alert('Erreur', 'Impossible de mettre à jour l\'antécédent familial.');
+          return;
+        }
+      }
+
+      await fetchAntecedents();
       setEditModalVisible(false);
       setEditItem({});
-
-      // Save to local JSON
-      await saveToJSONFile(updated, familiaux);
-    } else {
-      const updated = familiaux.map((f) =>
-        f.id === editItem.id
-          ? {
-            ...f,
-            titre: editItem.titre || '',
-            membre: (editItem as AntecedentFamilial).membre || '',
-            age_apparition: (editItem as AntecedentFamilial).age_apparition || '',
-            notes: (editItem as AntecedentFamilial).notes || '',
-          }
-          : f
-      );
-      setFamiliaux(updated);
-      setEditModalVisible(false);
-      setEditItem({});
-
-      // Save to local JSON
-      await saveToJSONFile(personnels, updated);
+    } catch (error) {
+      console.error('Error in handleEditSave:', error);
+      Alert.alert('Erreur', 'Une erreur s\'est produite lors de la modification.');
     }
   };
 
-  // ---- ADD FUNCTIONS ----
   const onAddPress = (category: 'personnels' | 'familiaux') => {
     setNewItem({ category });
     setAddModalVisible(true);
   };
 
   const handleAddSave = async () => {
-    const category = newItem.category;
-    if (!category) return setAddModalVisible(false);
+    try {
+      const category = newItem.category;
+      if (!category) {
+        setAddModalVisible(false);
+        return;
+      }
 
-    if (category === 'personnels') {
-      const newId = personnels.length > 0 ? personnels[personnels.length - 1].id + 1 : 1;
-      const newPersonnel: AntecedentPersonnel = {
-        id: newId,
-        titre: newItem.titre || '',
-        date: (newItem as AntecedentPersonnel).date || '',
-        traitement: (newItem as AntecedentPersonnel).traitement || '',
-        medecin: (newItem as AntecedentPersonnel).medecin || '',
-        notes: (newItem as AntecedentPersonnel).notes || '',
-      };
-      const updated = [...personnels, newPersonnel];
-      setPersonnels(updated);
-      setAddModalVisible(false);
-      setNewItem({});
+      if (category === 'personnels') {
+        const antecedent: AntecedentPersonnel = {
+          id: '', // Will be generated by the database
+          titre: newItem.titre || '',
+          date: (newItem as AntecedentPersonnel).date || '',
+          traitement: (newItem as AntecedentPersonnel).traitement || '',
+          medecin: (newItem as AntecedentPersonnel).medecin || '',
+          notes: (newItem as AntecedentPersonnel).notes || ''
+        };
 
-      // Save to local JSON
-      await saveToJSONFile(updated, familiaux);
-    } else {
-      const newId = familiaux.length > 0 ? familiaux[familiaux.length - 1].id + 1 : 1;
-      const newFamilial: AntecedentFamilial = {
-        id: newId,
-        titre: newItem.titre || '',
-        membre: (newItem as AntecedentFamilial).membre || '',
-        age_apparition: (newItem as AntecedentFamilial).age_apparition || '',
-        notes: (newItem as AntecedentFamilial).notes || '',
-      };
-      const updated = [...familiaux, newFamilial];
-      setFamiliaux(updated);
-      setAddModalVisible(false);
-      setNewItem({});
+        if (!isValidYear(antecedent.date)) {
+          Alert.alert('Erreur', 'L\'année doit être comprise entre 1900 et l\'année en cours.');
+          return;
+        }
 
-      // Save to local JSON
-      await saveToJSONFile(personnels, updated);
+        const success = await savePersonnelToDatabase(antecedent);
+        if (success) {
+          await fetchAntecedents();
+          setAddModalVisible(false);
+          setNewItem({});
+        }
+      } else {
+        const antecedent: AntecedentFamilial = {
+          id: '', // Will be generated by the database
+          titre: newItem.titre || '',
+          membre: (newItem as AntecedentFamilial).membre || '',
+          age_apparition: (newItem as AntecedentFamilial).age_apparition || '',
+          notes: (newItem as AntecedentFamilial).notes || ''
+        };
+
+        const success = await saveFamilialToDatabase(antecedent);
+        if (success) {
+          await fetchAntecedents();
+          setAddModalVisible(false);
+          setNewItem({});
+        }
+      }
+    } catch (error) {
+      console.error('Error in handleAddSave:', error);
+      Alert.alert('Erreur', 'Une erreur s\'est produite lors de l\'ajout.');
+    }
+  };
+
+  const handleDelete = async (category: 'personnels' | 'familiaux', id: string) => {
+    const success = await deleteAntecedent(category, id);
+    if (success) {
+      await fetchAntecedents();
     }
   };
 
   return (
     <View style={styles.container}>
-      {/* Burger icon (top-left) to open the sidebar if it’s closed */}
       {!menuVisible && (
         <TouchableOpacity onPress={() => setMenuVisible(true)} style={styles.menuIcon}>
           <Icon name="bars" size={30} color="black" />
         </TouchableOpacity>
       )}
-
-      {/* Home icon (top-right) */}
       <TouchableOpacity onPress={() => router.push('/(tabs)')} style={styles.homeIcon}>
         <Icon name="home" size={30} color="black" />
       </TouchableOpacity>
-
-      {/* Title at the top */}
       <Text style={styles.pageTitle}>MES ANTÉCÉDENTS</Text>
 
-      <ScrollView style={{ marginTop: 20 }}>
-        {/* Personnels */}
-        <TouchableOpacity onPress={togglePersonnels} style={styles.sectionHeader}>
-          <Text style={styles.sectionHeaderText}>Antécédents Personnels</Text>
-          <Text style={styles.sectionHeaderIcon}>{isPersonnelsOpen ? '-' : '+'}</Text>
-        </TouchableOpacity>
-        {isPersonnelsOpen && (
-          <View style={styles.sectionContent}>
-            {personnels.length === 0 ? (
-              <Text style={styles.emptyText}>Aucun antécédent personnel.</Text>
-            ) : (
-              personnels.map((item) => (
-                <View key={item.id} style={styles.antecedentCard}>
-                  <Text style={styles.itemTitle}>{item.titre}</Text>
-                  <Text style={styles.itemSub}>Date : {item.date}</Text>
-                  <Text style={styles.itemSub}>Traitement : {item.traitement}</Text>
-                  <Text style={styles.itemSub}>Médecin : {item.medecin}</Text>
-                  {item.notes ? <Text style={styles.itemSub}>Notes : {item.notes}</Text> : null}
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={COLORS.secondaryGreen} />
+          <Text style={styles.loadingText}>Chargement des antécédents...</Text>
+        </View>
+      ) : (
+        <ScrollView style={{ marginTop: 20 }}>
+          <TouchableOpacity onPress={togglePersonnels} style={styles.sectionHeader}>
+            <Text style={styles.sectionHeaderText}>Antécédents Personnels</Text>
+            <Text style={styles.sectionHeaderIcon}>{isPersonnelsOpen ? '-' : '+'}</Text>
+          </TouchableOpacity>
+          {isPersonnelsOpen && (
+            <View style={styles.sectionContent}>
+              {personnels.length === 0 ? (
+                <Text style={styles.emptyText}>Aucun antécédent personnel.</Text>
+              ) : (
+                personnels.map((item) => (
+                  <View key={item.id} style={styles.antecedentCard}>
+                    <Text style={styles.itemTitle}>{item.titre}</Text>
+                    <Text style={styles.itemSub}>Date : {item.date}</Text>
+                    <Text style={styles.itemSub}>Traitement : {item.traitement}</Text>
+                    <Text style={styles.itemSub}>Médecin : {item.medecin}</Text>
+                    {item.notes ? <Text style={styles.itemSub}>Notes : {item.notes}</Text> : null}
+                    <TouchableOpacity
+                      style={styles.editButton}
+                      onPress={() => onEditPress(item, 'personnels')}
+                    >
+                      <Text style={styles.editButtonText}>Modifier</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.editButton, { backgroundColor: 'red' }]}
+                      onPress={() => handleDelete('personnels', item.id)}
+                    >
+                      <Text style={styles.editButtonText}>Supprimer</Text>
+                    </TouchableOpacity>
+                  </View>
+                ))
+              )}
+              <TouchableOpacity style={styles.addButton} onPress={() => onAddPress('personnels')}>
+                <Text style={styles.addButtonText}>+ Ajouter un antécédent personnel</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          <TouchableOpacity onPress={toggleFamiliaux} style={styles.sectionHeader}>
+            <Text style={styles.sectionHeaderText}>Antécédents Familiaux</Text>
+            <Text style={styles.sectionHeaderIcon}>{isFamiliauxOpen ? '-' : '+'}</Text>
+          </TouchableOpacity>
+          {isFamiliauxOpen && (
+            <View style={styles.sectionContent}>
+              {familiaux.length === 0 ? (
+                <Text style={styles.emptyText}>Aucun antécédent familial.</Text>
+              ) : (
+                familiaux.map((item) => (
+                  <View key={item.id} style={styles.antecedentCard}>
+                    <Text style={styles.itemTitle}>{item.titre}</Text>
+                    <Text style={styles.itemSub}>Membre : {item.membre}</Text>
+                    <Text style={styles.itemSub}>
+                      Âge d&apos;apparition : {item.age_apparition}
+                    </Text>
+                    {item.notes ? <Text style={styles.itemSub}>Notes : {item.notes}</Text> : null}
+                    <TouchableOpacity
+                      style={styles.editButton}
+                      onPress={() => onEditPress(item, 'familiaux')}
+                    >
+                      <Text style={styles.editButtonText}>Modifier</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.editButton, { backgroundColor: 'red' }]}
+                      onPress={() => handleDelete('familiaux', item.id)}
+                    >
+                      <Text style={styles.editButtonText}>Supprimer</Text>
+                    </TouchableOpacity>
+                  </View>
+                ))
+              )}
+              <TouchableOpacity style={styles.addButton} onPress={() => onAddPress('familiaux')}>
+                <Text style={styles.addButtonText}>+ Ajouter un antécédent familial</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </ScrollView>
+      )}
 
-                  <TouchableOpacity
-                    style={styles.editButton}
-                    onPress={() => onEditPress(item, 'personnels')}
-                  >
-                    <Text style={styles.editButtonText}>Modifier</Text>
-                  </TouchableOpacity>
-                </View>
-              ))
-            )}
-            <TouchableOpacity style={styles.addButton} onPress={() => onAddPress('personnels')}>
-              <Text style={styles.addButtonText}>+ Ajouter un antécédent personnel</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-
-        {/* Familiaux */}
-        <TouchableOpacity onPress={toggleFamiliaux} style={styles.sectionHeader}>
-          <Text style={styles.sectionHeaderText}>Antécédents Familiaux</Text>
-          <Text style={styles.sectionHeaderIcon}>{isFamiliauxOpen ? '-' : '+'}</Text>
-        </TouchableOpacity>
-        {isFamiliauxOpen && (
-          <View style={styles.sectionContent}>
-            {familiaux.length === 0 ? (
-              <Text style={styles.emptyText}>Aucun antécédent familial.</Text>
-            ) : (
-              familiaux.map((item) => (
-                <View key={item.id} style={styles.antecedentCard}>
-                  <Text style={styles.itemTitle}>{item.titre}</Text>
-                  <Text style={styles.itemSub}>Membre : {item.membre}</Text>
-                  <Text style={styles.itemSub}>
-                    Âge d&apos;apparition : {item.age_apparition}
-                  </Text>
-                  {item.notes ? <Text style={styles.itemSub}>Notes : {item.notes}</Text> : null}
-
-                  <TouchableOpacity
-                    style={styles.editButton}
-                    onPress={() => onEditPress(item, 'familiaux')}
-                  >
-                    <Text style={styles.editButtonText}>Modifier</Text>
-                  </TouchableOpacity>
-                </View>
-              ))
-            )}
-            <TouchableOpacity style={styles.addButton} onPress={() => onAddPress('familiaux')}>
-              <Text style={styles.addButtonText}>+ Ajouter un antécédent familial</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </ScrollView>
-
-      {/* Edit Modal */}
       <Modal
         visible={editModalVisible}
         transparent
@@ -303,22 +476,18 @@ const MesAntecedents: React.FC = () => {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Modifier l’antécédent</Text>
-
-            {/* Common field: Titre */}
+            <Text style={styles.modalTitle}>Modifier l'antécédent</Text>
             <TextInput
               style={styles.input}
               placeholder="Titre"
               value={editItem.titre}
               onChangeText={(text) => setEditItem({ ...editItem, titre: text })}
             />
-
-            {/* Personnel fields */}
             {editItem.category === 'personnels' && (
               <>
                 <TextInput
                   style={styles.input}
-                  placeholder="Date"
+                  placeholder="Année (AAAA)"
                   value={(editItem as AntecedentPersonnel).date}
                   onChangeText={(text) => setEditItem({ ...editItem, date: text })}
                 />
@@ -342,8 +511,6 @@ const MesAntecedents: React.FC = () => {
                 />
               </>
             )}
-
-            {/* Familial fields */}
             {editItem.category === 'familiaux' && (
               <>
                 <TextInput
@@ -368,7 +535,6 @@ const MesAntecedents: React.FC = () => {
                 />
               </>
             )}
-
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={[styles.modalButton, { backgroundColor: '#ccc' }]}
@@ -387,7 +553,6 @@ const MesAntecedents: React.FC = () => {
         </View>
       </Modal>
 
-      {/* Add Modal */}
       <Modal
         visible={addModalVisible}
         transparent
@@ -397,8 +562,6 @@ const MesAntecedents: React.FC = () => {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Ajouter un nouvel antécédent</Text>
-
-            {/* Personnel fields */}
             {newItem.category === 'personnels' && (
               <>
                 <TextInput
@@ -409,7 +572,7 @@ const MesAntecedents: React.FC = () => {
                 />
                 <TextInput
                   style={styles.input}
-                  placeholder="Date"
+                  placeholder="Année (AAAA)"
                   value={(newItem as AntecedentPersonnel).date || ''}
                   onChangeText={(text) => setNewItem({ ...newItem, date: text })}
                 />
@@ -433,8 +596,6 @@ const MesAntecedents: React.FC = () => {
                 />
               </>
             )}
-
-            {/* Familial fields */}
             {newItem.category === 'familiaux' && (
               <>
                 <TextInput
@@ -463,7 +624,6 @@ const MesAntecedents: React.FC = () => {
                 />
               </>
             )}
-
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={[styles.modalButton, { backgroundColor: '#ccc' }]}
@@ -482,7 +642,6 @@ const MesAntecedents: React.FC = () => {
         </View>
       </Modal>
 
-      {/* Sidebar overlay */}
       <Sidebar menuVisible={menuVisible} closeMenu={() => setMenuVisible(false)} />
     </View>
   );
@@ -490,7 +649,6 @@ const MesAntecedents: React.FC = () => {
 
 export default MesAntecedents;
 
-// Example color constants
 const COLORS = {
   primaryBlue: '#233468',
   secondaryGreen: '#b6d379',
@@ -522,7 +680,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     color: 'black',
-    fontFamily: 'Sora-Medium', // or 'Nunito' if you prefer
+    fontFamily: 'Sora-Medium',
+    marginTop: 15,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: COLORS.textDark,
   },
   sectionHeader: {
     backgroundColor: COLORS.secondaryGreen,
@@ -600,7 +769,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.7)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     padding: 20,
   },
@@ -622,18 +791,22 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     padding: 8,
     marginBottom: 8,
+    color: COLORS.textDark,
   },
   modalButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: 10,
   },
   modalButton: {
     borderRadius: 4,
     paddingVertical: 10,
     paddingHorizontal: 16,
+    minWidth: 100,
+    alignItems: 'center',
   },
   modalButtonText: {
-    color: '#000',
+    color: '#fff',
     fontWeight: '600',
   },
 });
