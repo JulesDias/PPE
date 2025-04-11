@@ -5,12 +5,36 @@ import { supabase } from '@/services/supabase';
 import { router } from 'expo-router';
 import Sidebar from '@/components/Sidebar';
 
-const ProfileField = ({ label, value }: { label: string; value: string }) => (
-  <View style={styles.fieldContainer}>
-    <Text style={styles.fieldLabel}>{label}</Text>
-    <TextInput value={value} editable={false} style={styles.input} />
-  </View>
-);
+const ProfileField = ({ label, fieldKey, value, onChange }: {
+  label: string;
+  fieldKey: string;
+  value: string;
+  onChange: (field: string, value: string) => void;
+}) => {
+  const [localValue, setLocalValue] = useState(value);
+
+  useEffect(() => {
+    setLocalValue(value); // mise à jour si la prop change
+  }, [value]);
+
+  const handleBlur = () => {
+    if (localValue !== value) {
+      onChange(fieldKey, localValue); // mise à jour uniquement si changé
+    }
+  };
+
+  return (
+    <View style={styles.fieldContainer}>
+      <Text style={styles.fieldLabel}>{label}</Text>
+      <TextInput
+        value={localValue}
+        onChangeText={setLocalValue}
+        onBlur={handleBlur}
+        style={styles.input}
+      />
+    </View>
+  );
+};
 
 export default function ProfileScreen() {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -21,6 +45,25 @@ export default function ProfileScreen() {
   const [showVaccins, setShowVaccins] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [newVaccine, setNewVaccine] = useState({ Nom: '', V_date: '', next_date: '' });
+
+  const handleFieldChange = async (field: string, value: string) => {
+    const updatedData = { ...userData, [field]: value };
+    setUserData(updatedData);
+  
+    try {
+      const { error } = await supabase
+        .from("utilisateurs")
+        .update({ [field]: value })
+        .eq("id", userId);
+  
+      if (error) {
+        console.error(`Erreur mise à jour champ ${field} :`, error.message);
+      }
+    } catch (err) {
+      console.error("Erreur lors de la mise à jour :", err);
+    }
+  };
+  
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -107,21 +150,21 @@ export default function ProfileScreen() {
       <ScrollView>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Mes informations</Text>
-            <ProfileField label="Nom" value={userData.Nom} />
-            <ProfileField label="Prénom" value={userData.Prenom} />
-            <ProfileField label="E-mail" value={userData.Email} />
-            <ProfileField label="Téléphone" value={userData.Tel_perso} />
+          <ProfileField label="Nom" fieldKey="Nom" value={userData.Nom} onChange={handleFieldChange} />
+          <ProfileField label="Prénom" fieldKey="Prenom" value={userData.Prenom} onChange={handleFieldChange} />
+          <ProfileField label="E-mail" fieldKey="Email" value={userData.Email} onChange={handleFieldChange} />
+          <ProfileField label="Téléphone" fieldKey="Tel_perso" value={userData.Tel_perso} onChange={handleFieldChange} />
         </View>
-        {/* HEALTH DATA */}
+
         <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Mes données de santé</Text>
-            <ProfileField label="Date de Naissance" value={userData.D_naissance} />
-            <ProfileField label="Sexe" value={userData.Sexe}/>
-            <ProfileField label="Poids" value={`${userData.Poids} kg`} />
-            <ProfileField label="Taille" value={`${userData.Taille} cm`} />
-            <ProfileField label="Groupe sanguin" value={userData.G_sanguin} />
+          <Text style={styles.sectionTitle}>Mes données de santé</Text>
+          <ProfileField label="Date de Naissance" fieldKey="D_naissance" value={userData.D_naissance} onChange={handleFieldChange} />
+          <ProfileField label="Sexe" fieldKey="Sexe" value={userData.Sexe} onChange={handleFieldChange} />
+          <ProfileField label="Poids (kg)" fieldKey="Poids" value={String(userData.Poids)} onChange={handleFieldChange} />
+          <ProfileField label="Taille (cm)" fieldKey="Taille" value={String(userData.Taille)} onChange={handleFieldChange} />
+          <ProfileField label="Groupe sanguin" fieldKey="G_sanguin" value={userData.G_sanguin} onChange={handleFieldChange} />
         </View>
-        
+
         <TouchableOpacity style={styles.vaccineToggle} onPress={() => setShowVaccins(!showVaccins)}>
         <Text style={styles.toggleText}>Mes Vaccins</Text>
             <Icon
