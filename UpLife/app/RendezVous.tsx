@@ -81,7 +81,45 @@ const GestionRDV = () => {
                     text: `${moment(rdv.Date_rdv).format('MMMM YYYY')} - ${rdv.medecin_specialite} - Dr ${rdv.medecin_prenom || ''} ${rdv.medecin_nom}`.trim(),
                     checked: false
                 }));
-            setRappels(upcomingRdvs);
+
+            // Calculate next appointment reminders
+            const nextAppointmentReminders = formattedData
+                .filter(rdv => new Date(rdv.Date_rdv) <= new Date())
+                .map((rdv) => {
+                    let nextAppointmentDate = new Date(rdv.Date_rdv);
+                    switch (rdv.medecin_specialite) {
+                        case 'Gynécologue':
+                            nextAppointmentDate.setFullYear(nextAppointmentDate.getFullYear() + 1);
+                            break;
+                        case 'Généraliste':
+                            nextAppointmentDate.setFullYear(nextAppointmentDate.getFullYear() + 1);
+                            break;
+                        case 'Ophtalmologue':
+                            nextAppointmentDate.setFullYear(nextAppointmentDate.getFullYear() + 2);
+                            break;
+                        case 'Orthopédiste':
+                            nextAppointmentDate.setMonth(nextAppointmentDate.getMonth() + 3);
+                            break;
+                        case 'Rhumatologue':
+                            nextAppointmentDate.setMonth(nextAppointmentDate.getMonth() + 3);
+                            break;
+                        case 'Proctologue':
+                            nextAppointmentDate.setFullYear(nextAppointmentDate.getFullYear() + 1);
+                            break;
+                        case 'Dentiste':
+                            nextAppointmentDate.setMonth(nextAppointmentDate.getMonth() + 6);
+                            break;
+                        default:
+                            nextAppointmentDate.setFullYear(nextAppointmentDate.getFullYear() + 1);
+                    }
+                    return {
+                        id: rdv.ID_rdv,
+                        text: `${moment(nextAppointmentDate).format('MMMM YYYY')} - ${rdv.medecin_specialite} - Dr ${rdv.medecin_prenom || ''} ${rdv.medecin_nom}`.trim(),
+                        checked: false
+                    };
+                });
+
+            setRappels([...upcomingRdvs, ...nextAppointmentReminders]);
         }
     };
 
