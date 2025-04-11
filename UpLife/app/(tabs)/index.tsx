@@ -3,8 +3,6 @@ import { View, Text, TouchableOpacity, StyleSheet, Platform, ScrollView } from '
 import { Entypo } from '@expo/vector-icons';
 import { WebView } from 'react-native-webview';
 import Sidebar from '../../components/Sidebar';
-import rdvs from '@/data/rdvs.json';
-import traitements from '@/data/traitements.json'; // Import du fichier JSON des traitements
 import { router } from 'expo-router';
 import moment from 'moment';
 import 'moment/locale/fr';
@@ -54,35 +52,68 @@ export default function HomePage() {
         } else if (utilisateurData) {
           setPrenom(utilisateurData.Prenom);
         }
+
+        // Récupérer les rendez-vous
+        await fetchRDVs(userId);
+
+        // Récupérer les traitements
+        await fetchTraitements(userId);
       }
     };
+
+    const fetchRDVs = async (userId: string) => {
+      const { data, error } = await supabase
+        .from("rdvs")
+        .select("*")
+        .eq("ID_utilisateur", userId)
+        .order('Date_rdv', { ascending: true });
+
+      if (error) {
+        console.error("Erreur lors de la récupération des RDVs:", error);
+        return;
+      }
+
+      if (data) {
+        const upcomingRdvs = data
+          .filter(rdv => new Date(rdv.Date_rdv) >= new Date())
+          .slice(0, 3);
+
+        setNextAppointments(upcomingRdvs);
+      }
+    };
+
+    const fetchTraitements = async (userId: string) => {
+      const { data, error } = await supabase
+        .from("traitements")
+        .select("*")
+        .eq("ID_utilisateur", userId);
+
+      if (error) {
+        console.error("Erreur lors de la récupération des traitements:", error);
+        return;
+      }
+
+      if (data) {
+        const sortedTraitements: any = { matin: [], midi: [], soir: [] };
+
+        data.forEach(traitement => {
+          const heure = parseInt(traitement.heure.split(':')[0], 10);
+          if (heure < 12) {
+            sortedTraitements.matin.push(traitement);
+          } else if (heure < 18) {
+            sortedTraitements.midi.push(traitement);
+          } else {
+            sortedTraitements.soir.push(traitement);
+          }
+        });
+
+        setTraitementsDuJour(sortedTraitements);
+      }
+    };
+
     fetchUser();
     moment.locale('fr');
     loadCheckedItems();
-
-    // Filtrer les rendez-vous à venir
-    const upcomingRdvs = rdvs
-      .filter(rdv => new Date(rdv.Date_rdv) >= new Date())
-      .sort((a, b) => new Date(a.Date_rdv).getTime() - new Date(b.Date_rdv).getTime())
-      .slice(0, 3);
-
-    setNextAppointments(upcomingRdvs);
-
-    // Trier les traitements par heure de prise
-    const sortedTraitements: any = { matin: [], midi: [], soir: [] };
-
-    traitements.forEach(traitement => {
-      const heure = parseInt(traitement.heure.split(':')[0], 10);
-      if (heure < 12) {
-        sortedTraitements.matin.push(traitement);
-      } else if (heure < 18) {
-        sortedTraitements.midi.push(traitement);
-      } else {
-        sortedTraitements.soir.push(traitement);
-      }
-    });
-
-    setTraitementsDuJour(sortedTraitements);
   }, []);
 
   const loadCheckedItems = async () => {
@@ -124,7 +155,7 @@ export default function HomePage() {
               {nextAppointments.length > 0 ? (
                 nextAppointments.map((rdv, index) => (
                   <View key={index} style={styles.rdvItem}>
-                    <Text style={styles.rdvDate}>{rdv.Date_rdv} - {rdv.Horaire}</Text>
+                    <Text style={styles.rdvDate}>{moment(rdv.Date_rdv).format('DD/MM/YYYY')} - {rdv.Horaire}</Text>
                     <Text style={styles.rdvText}>{rdv.Intitule}</Text>
                   </View>
                 ))
@@ -144,12 +175,12 @@ export default function HomePage() {
                 <Text style={styles.bold}>{periode.charAt(0).toUpperCase() + periode.slice(1)} :</Text>
                 {items.length > 0 ? (
                   items.map((t) => (
-                    <View key={t.id} style={styles.checkboxContainer}>
+                    <View key={t.ID_traitement} style={styles.checkboxContainer}>
                       <Checkbox
-                        status={checkedItems[t.id] ? 'checked' : 'unchecked'}
-                        onPress={() => handleCheckboxChange(t.id.toString())}
+                        status={checkedItems[t.ID_traitement] ? 'checked' : 'unchecked'}
+                        onPress={() => handleCheckboxChange(t.ID_traitement.toString())}
                       />
-                      <Text style={{ color: '#ddd' }}> {t.nom} / {moment(t.heure, "HH:mm").format("HH[h]mm")}</Text>
+                      <Text style={{ color: '#ddd' }}> {t.Nom} / {moment(t.heure, "HH:mm").format("HH[h]mm")}</Text>
                     </View>
                   ))
                 ) : <Text style={{ color: '#ddd' }}>Aucun</Text>}
@@ -182,9 +213,9 @@ const styles = StyleSheet.create({
   headerText: { fontSize: 22, fontWeight: 'bold', color: 'white', marginLeft: 10 },
   content: { padding: 15 },
   bold: { fontWeight: "bold", marginTop: 10, color: 'white' },
-  checkboxContainer: { flexDirection: "row", alignItems: "center", marginBottom: 5},
+  checkboxContainer: { flexDirection: "row", alignItems: "center", marginBottom: 5 },
   treatmentTitle: { fontWeight: 'bold', marginBottom: 10, color: 'white' },
-  mapContainer: { borderRadius: 10, overflow: 'hidden', height: 350, backgroundColor: '#ddd', marginBottom: 20},
+  mapContainer: { borderRadius: 10, overflow: 'hidden', height: 350, backgroundColor: '#ddd', marginBottom: 20 },
   card: {
     backgroundColor: '#233468', //#93b8d3 #233468  //f0f0f0
     borderRadius: 8,

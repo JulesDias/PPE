@@ -9,7 +9,7 @@ export default function Layout() {
         const checkSession = async () => {
             const { data } = await supabase.auth.getSession();
             if (!data.session) {
-                router.replace('/login'); // Redirection si non connecté
+                router.replace('/login');
             }
             setIsLoading(false);
         };
@@ -17,7 +17,7 @@ export default function Layout() {
         checkSession();
     }, []);
 
-    if (isLoading) return null; // Évite un écran blanc pendant la vérification
+    if (isLoading) return null;
 
     return (
         <Stack
@@ -26,8 +26,9 @@ export default function Layout() {
             }}
         >
             <Stack.Screen name="index" />
-            <Stack.Screen name="/login" />
-            <Stack.Screen name="/SignUpScreen" />
+            {/* Supprimer les '/' devant les noms de routes */}
+            <Stack.Screen name="login" />
+            <Stack.Screen name="SignUpScreen" />
         </Stack>
     );
 }
