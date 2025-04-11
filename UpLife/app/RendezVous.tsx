@@ -11,6 +11,7 @@ import moment from 'moment';
 import 'moment/locale/fr';
 
 interface RDV {
+    ID_rdv: string;
     ID_utilisateur: string;
     ID_medecin: string;
     Date_rdv: string;
@@ -120,7 +121,13 @@ const GestionRDV = () => {
     };
 
     const handleEditRDV = (rdv: RDV) => {
-        setCurrentRDV(rdv);
+        setCurrentRDV({
+            ...rdv, // Cela inclut l'ID_rdv
+            Date_rdv: rdv.Date_rdv,
+            Horaire: rdv.Horaire,
+            Intitule: rdv.Intitule,
+            ID_medecin: rdv.ID_medecin
+        });
         setEditMode(true);
         setModalVisible(true);
     };
@@ -140,9 +147,7 @@ const GestionRDV = () => {
                         const { error } = await supabase
                             .from("rdvs")
                             .delete()
-                            .eq("ID_utilisateur", selectedRDV.ID_utilisateur)
-                            .eq("ID_medecin", selectedRDV.ID_medecin)
-                            .eq("Date_rdv", selectedRDV.Date_rdv);
+                            .eq("ID_rdv", selectedRDV.ID_rdv);
 
                         if (error) {
                             console.error("Erreur lors de la suppression:", error);
@@ -166,23 +171,16 @@ const GestionRDV = () => {
         }
 
         try {
-            if (editMode && selectedRDV) {
-                await supabase
-                    .from("rdvs")
-                    .delete()
-                    .eq("ID_utilisateur", selectedRDV.ID_utilisateur)
-                    .eq("ID_medecin", selectedRDV.ID_medecin)
-                    .eq("Date_rdv", selectedRDV.Date_rdv);
-
+            if (editMode && currentRDV.ID_rdv) { // Vérifiez currentRDV.ID_rdv au lieu de selectedRDV
                 const { error } = await supabase
                     .from("rdvs")
-                    .insert({
-                        ID_utilisateur: user.id,
+                    .update({
                         ID_medecin: currentRDV.ID_medecin,
                         Date_rdv: currentRDV.Date_rdv,
                         Horaire: currentRDV.Horaire,
                         Intitule: currentRDV.Intitule
-                    });
+                    })
+                    .eq("ID_rdv", currentRDV.ID_rdv); // Utilisez currentRDV.ID_rdv
 
                 if (error) throw error;
             } else {
@@ -200,6 +198,7 @@ const GestionRDV = () => {
             }
 
             setModalVisible(false);
+            setSelectedRDV(null); // Ajoutez cette ligne pour nettoyer selectedRDV
             fetchRDVs();
         } catch (error) {
             console.error("Erreur lors de la sauvegarde:", error);
@@ -308,7 +307,7 @@ const GestionRDV = () => {
                 ) : (
                     <FlatList
                         data={rdvData}
-                        keyExtractor={(item) => `${item.ID_medecin}-${item.Date_rdv}-${item.Horaire}`}
+                        keyExtractor={(item) => item.ID_rdv}
                         renderItem={({ item }) => (
                             <TouchableOpacity onPress={() => setSelectedRDV(item)}>
                                 <View style={styles.rdvItem}>
