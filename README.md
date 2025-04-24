@@ -1,3 +1,4 @@
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)  
 # 📱 PPE - Application Mobile Santé
 
 Bienvenue dans le dépôt de l'application mobile **PPE** développée avec **React Native** et **Expo**. Cette app vise à centraliser des informations de santé, faciliter la gestion des rendez-vous médicaux et fournir des outils de prévention accessibles à tous.
@@ -92,7 +93,3 @@ Jules Dias - [@JulesDias](https://github.com/JulesDias)
 Paul Rouxel - [@PaulRouxel](https://github.com/PaulRouxel)  
 Arthur Berret - [@Atlas002](https://github.com/Atlas002)  
 Gabrielle Leclerc - [@gabylclr](https://github.com/gabylclr)  
-
-
-
-  
